@@ -1,16 +1,36 @@
 # 🎣 Fishing Planet Info
 
 Repositório **colaborativo** de informações do jogo **Fishing Planet**: pontos de
-pesca, peixes, **valor (US$/kg)**, **XP/kg**, **raridade**, **isca**, **tipo de vara**
-e o **range de horário** em que cada peixe é mais fácil de pegar. Qualquer pessoa
-pode **adicionar** e **remover** informações.
+pesca, peixes, **valor (US$/kg)**, **XP/kg**, **raridade**, **período (☀️ dia / 🌙 noite)**,
+**isca**, **tipo de vara** e o **range de horário** em que cada peixe é mais fácil de
+pegar. Qualquer pessoa pode **adicionar** e **remover** informações.
 
 É um site estático (HTML + CSS + JS puro, **sem build**) que junta:
 
 - o app **[fishingplanetvalores.netlify.app](https://fishingplanetvalores.netlify.app/)** — backend colaborativo em **Supabase** (tabelas `locais_pesca` / `peixes`, com `raridade` e `xp_kg`);
 - o **HTML em anexo** — UI escura e o ranking "qual compensa mais" (US$/kg);
 
-e acrescenta os campos pedidos: **isca, tipo de vara, horário (de–até), profundidade, observações e nome científico**.
+e acrescenta: **período diurno/noturno, isca, tipo de vara, horário (de–até),
+profundidade, observações, nome científico**, além de **nível/licença e guia por
+ponto de pesca**.
+
+## Recursos
+
+- **Ordenação por coluna**: clique no cabeçalho (Peixe, US$/kg, XP/kg, Período,
+  Isca, Vara, Horário) para ordenar — alterna ▲/▼. Vazios sempre por último.
+  Também há um seletor (inclui ordenar por raridade).
+- **Busca** por peixe, ponto, isca, vara ou período.
+- **Barra de estatísticas** (pontos, peixes, espécies, troféus) e **índice** de
+  pontos para navegação rápida.
+- **Destaque "compensa mais"** (maior US$/kg).
+
+## Cobertura atual dos dados de exemplo
+
+**5 águas / ~36 peixes**: Rio Mudwater (MO), Pesqueiro Lesni Vila (CZ), Emerald
+Lake (NY), Lone Star Lake (TX) e Quanchkin Lake (LA). O jogo tem ~26+ águas e
+~170+ espécies — o objetivo é a **comunidade preencher o resto**. Valores de
+US$/kg confiáveis foram preenchidos; onde não havia dado, o campo fica em branco
+(em vez de inventar número).
 
 ---
 
@@ -71,10 +91,15 @@ supabase/seed.sql   dados de exemplo (modo colaborativo)
 ```
 
 ### Modelo de dados
-- **locais_pesca**: `id`, `nome`, `regiao`, `criado_em`
+
+- **locais_pesca**: `id`, `nome`, `regiao`, `nivel`, `guia`, `criado_em`
 - **peixes**: `id`, `local_id`, `nome`, `nome_cientifico`, `raridade`
-  (`comum`/`jovem`/`troféu`), `valor_kg`, `xp_kg`, `isca`, `tipo_vara`,
-  `horario_inicio`, `horario_fim`, `profundidade`, `obs`, `criado_em`
+  (`comum`/`jovem`/`troféu`), `periodo` (`diurno`/`noturno`/`ambos`), `valor_kg`,
+  `xp_kg`, `isca`, `tipo_vara`, `horario_inicio`, `horario_fim`, `profundidade`,
+  `obs`, `criado_em`
+
+> Atualizando de uma versão anterior do banco? O `schema.sql` traz os
+> `ALTER TABLE ... add column if not exists` para `nivel`, `guia` e `periodo`.
 
 ---
 

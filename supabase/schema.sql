@@ -12,6 +12,8 @@ create table if not exists public.locais_pesca (
   id         bigint generated always as identity primary key,
   nome       text not null,
   regiao     text,
+  nivel      text,               -- nível/licença recomendada (ex: "Nível 1+")
+  guia       text,               -- dicas/guia do local
   criado_em  timestamptz not null default now()
 );
 
@@ -21,6 +23,7 @@ create table if not exists public.peixes (
   nome            text not null,
   nome_cientifico text,
   raridade        text default 'comum',
+  periodo         text,           -- "diurno" | "noturno" | "ambos"
   valor_kg        numeric(10,2),
   xp_kg           integer,
   isca            text,
@@ -31,6 +34,11 @@ create table if not exists public.peixes (
   obs             text,
   criado_em       timestamptz not null default now()
 );
+
+-- Migração: se as tabelas já existiam (versão anterior), adicione as colunas novas:
+alter table public.locais_pesca add column if not exists nivel text;
+alter table public.locais_pesca add column if not exists guia  text;
+alter table public.peixes        add column if not exists periodo text;
 
 create index if not exists peixes_local_id_idx on public.peixes (local_id);
 

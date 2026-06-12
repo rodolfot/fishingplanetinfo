@@ -47,7 +47,8 @@ class LocalStore {
   }
   seedClone() {
     return SEED.map((l) => ({
-      id: uid(), nome: l.nome, regiao: l.regiao ?? null, criado_em: new Date().toISOString(),
+      id: uid(), nome: l.nome, regiao: l.regiao ?? null, nivel: l.nivel ?? null, guia: l.guia ?? null,
+      criado_em: new Date().toISOString(),
       peixes: l.peixes.map((p) => ({ id: uid(), local_id: null, ...p })),
     }));
   }
@@ -56,8 +57,8 @@ class LocalStore {
   async init() { return this.locais; }
   getLocais() { return this.locais; }
 
-  async addLocal({ nome, regiao }) {
-    this.locais.push({ id: uid(), nome, regiao: regiao || null, criado_em: new Date().toISOString(), peixes: [] });
+  async addLocal({ nome, regiao, nivel, guia }) {
+    this.locais.push({ id: uid(), nome, regiao: regiao || null, nivel: nivel || null, guia: guia || null, criado_em: new Date().toISOString(), peixes: [] });
     this.persist();
   }
   async delLocal(id) {
@@ -102,9 +103,9 @@ class SupabaseStore {
   }
   getLocais() { return this.locais; }
 
-  async addLocal({ nome, regiao }) {
+  async addLocal({ nome, regiao, nivel, guia }) {
     const { data, error } = await this.client
-      .from("locais_pesca").insert({ nome, regiao: regiao || null }).select().single();
+      .from("locais_pesca").insert({ nome, regiao: regiao || null, nivel: nivel || null, guia: guia || null }).select().single();
     if (error) throw new Error(error.message);
     this.locais.push({ ...data, peixes: [] });
   }
@@ -174,15 +175,31 @@ function wireHandlers() {
     if (!store) return;
     const nome = $("#localName").value.trim();
     const regiao = $("#localRegion").value.trim();
+    const nivel = $("#localNivel").value.trim();
+    const guia = $("#localGuia").value.trim();
     if (!nome) return;
-    await guard(() => store.addLocal({ nome, regiao }));
-    $("#localName").value = "";
-    $("#localRegion").value = "";
+    await guard(() => store.addLocal({ nome, regiao, nivel, guia }));
+    for (const id of ["#localName", "#localRegion", "#localNivel", "#localGuia"]) $(id).value = "";
     render();
   });
 
   $("#search").addEventListener("input", render);
-  $("#sort").addEventListener("change", render);
+  $("#sort").addEventListener("change", (e) => {
+    const [key, dir] = e.target.value.split(":");
+    if (key) sortState = { key, dir: dir || "asc" };
+    render();
+  });
+
+  $("#localIndex").addEventListener("click", (e) => {
+    const chip = e.target.closest("[data-goto]");
+    if (!chip) return;
+    const target = document.getElementById(chip.dataset.goto);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      target.classList.add("flash");
+      setTimeout(() => target.classList.remove("flash"), 900);
+    }
+  });
 
   $("#resetBtn").addEventListener("click", async () => {
     if (!store || store.mode !== "local") return;
@@ -194,6 +211,9 @@ function wireHandlers() {
   // delegação para botões e formulários gerados dinamicamente
   const locais = $("#locais");
   locais.addEventListener("click", async (e) => {
+    // ordenar ao clicar no cabeçalho da coluna
+    const th = e.target.closest("th[data-sort-key]");
+    if (th) { setSort(th.dataset.sortKey); render(); return; }
     const btn = e.target.closest("[data-action]");
     if (!btn || !store) return;
     const { action, local, id } = btn.dataset;
@@ -232,6 +252,7 @@ function readFishForm(form) {
     nome: g("nome"),
     nome_cientifico: g("nome_cientifico") || null,
     raridade: g("raridade") || "comum",
+    periodo: g("periodo") || null,
     valor_kg: numOrNull(g("valor_kg")),
     xp_kg: intOrNull(g("xp_kg")),
     isca: g("isca") || null,
@@ -243,29 +264,100 @@ function readFishForm(form) {
   };
 }
 
-// ---- render ------------------------------------------------------------------
-const SORTERS = {
-  "price-desc": (a, b) => nz(b.valor_kg) - nz(a.valor_kg),
-  "price-asc":  (a, b) => pz(a.valor_kg) - pz(b.valor_kg),
-  "xp-desc":    (a, b) => nz(b.xp_kg) - nz(a.xp_kg),
-  "name-asc":   (a, b) => String(a.nome).localeCompare(String(b.nome), "pt-BR"),
-  "rarity":     (a, b) => rarityRank(a.raridade) - rarityRank(b.raridade) || nz(b.valor_kg) - nz(a.valor_kg),
-};
-const nz = (v) => (v == null ? -Infinity : Number(v));   // nulos por último em desc
-const pz = (v) => (v == null ?  Infinity : Number(v));   // nulos por último em asc
+// ---- ordenação ---------------------------------------------------------------
 const rarityRank = (r) => ({ trofeu: 0, comum: 1, jovem: 2 }[rarityClass(r)] ?? 3);
+const collator = new Intl.Collator("pt-BR", { numeric: true, sensitivity: "base" });
 
+// colunas da tabela (key = chave de ordenação; null = coluna não ordenável)
+const COLUMNS = [
+  { key: null,        label: "#",        cls: "rank" },
+  { key: "name",      label: "Peixe" },
+  { key: "valor_kg",  label: "US$/kg",   cls: "num" },
+  { key: "xp_kg",     label: "XP/kg",    cls: "num" },
+  { key: "periodo",   label: "Período" },
+  { key: "isca",      label: "Isca" },
+  { key: "tipo_vara", label: "Vara" },
+  { key: "horario",   label: "Horário" },
+  { key: null,        label: "" },
+];
+
+let sortState = { key: "valor_kg", dir: "desc" };
+const DEFAULT_DIR = { valor_kg: "desc", xp_kg: "desc", raridade: "asc" }; // resto: asc
+
+const timeToMin = (t) => {
+  const m = /^(\d{1,2}):(\d{2})$/.exec(t || "");
+  return m ? +m[1] * 60 + +m[2] : null;
+};
+function sortValue(f, key) {
+  switch (key) {
+    case "name":      return f.nome || "";
+    case "raridade":  return rarityRank(f.raridade);
+    case "valor_kg":  return f.valor_kg;
+    case "xp_kg":     return f.xp_kg;
+    case "periodo":   return f.periodo || "";
+    case "isca":      return f.isca || "";
+    case "tipo_vara": return f.tipo_vara || "";
+    case "horario":   return timeToMin(f.horario_inicio);
+    default:          return f[key];
+  }
+}
+const isEmpty = (v) => v == null || v === "";
+function cmpFactory(key, dir) {
+  const mul = dir === "asc" ? 1 : -1;
+  return (a, b) => {
+    const va = sortValue(a, key), vb = sortValue(b, key);
+    const ea = isEmpty(va), eb = isEmpty(vb);
+    if (ea && eb) return 0;
+    if (ea) return 1;   // vazios sempre por último, independente da direção
+    if (eb) return -1;
+    const r = typeof va === "number" && typeof vb === "number"
+      ? va - vb : collator.compare(String(va), String(vb));
+    return r * mul;
+  };
+}
+function setSort(key) {
+  if (!key) return;
+  if (sortState.key === key) sortState.dir = sortState.dir === "asc" ? "desc" : "asc";
+  else sortState = { key, dir: DEFAULT_DIR[key] || "asc" };
+  syncSortSelect();
+}
+function syncSortSelect() {
+  const sel = document.getElementById("sort");
+  if (!sel) return;
+  const v = `${sortState.key}:${sortState.dir}`;
+  sel.value = [...sel.options].some((o) => o.value === v) ? v : "";
+}
+function thead() {
+  return "<tr>" + COLUMNS.map((c) => {
+    if (!c.key) return `<th class="${c.cls || ""}">${c.label}</th>`;
+    const active = sortState.key === c.key;
+    const arrow = active ? (sortState.dir === "asc" ? " ▲" : " ▼") : "";
+    const cls = `${c.cls ? c.cls + " " : ""}sortable${active ? " active" : ""}`;
+    return `<th class="${cls}" data-sort-key="${c.key}" title="Ordenar por ${c.label}">${c.label}${arrow}</th>`;
+  }).join("") + "</tr>";
+}
+function periodoBadge(p) {
+  const k = (p || "").toLowerCase();
+  if (k.startsWith("diur"))  return '<span class="per per-dia" title="Diurno">☀️ dia</span>';
+  if (k.startsWith("notur")) return '<span class="per per-noite" title="Noturno">🌙 noite</span>';
+  if (k.startsWith("amb"))   return '<span class="per per-ambos" title="Dia e noite">🌓 ambos</span>';
+  return p ? esc(p) : "—";
+}
+
+// ---- render ------------------------------------------------------------------
 function render() {
   const locais = store?.getLocais() ?? [];
   renderBest(locais);
+  renderStats(locais);
+  renderIndex(locais);
 
   const q = $("#search").value.trim().toLowerCase();
-  const sorter = SORTERS[$("#sort").value] || SORTERS["price-desc"];
+  const sorter = cmpFactory(sortState.key, sortState.dir);
   const container = $("#locais");
   container.innerHTML = "";
 
   const matchFish = (f) =>
-    [f.nome, f.nome_cientifico, f.isca, f.tipo_vara].some((x) => (x || "").toLowerCase().includes(q));
+    [f.nome, f.nome_cientifico, f.isca, f.tipo_vara, f.periodo].some((x) => (x || "").toLowerCase().includes(q));
 
   let shown = 0;
   for (const loc of locais) {
@@ -282,6 +374,30 @@ function render() {
   } else if (!shown) {
     container.innerHTML = `<div class="empty">Nada encontrado para "${esc(q)}".</div>`;
   }
+}
+
+function renderStats(locais) {
+  const el = document.getElementById("stats");
+  if (!el) return;
+  const peixes = locais.flatMap((l) => l.peixes);
+  const especies = new Set(peixes.map((f) => (f.nome || "").toLowerCase().trim()).filter(Boolean));
+  const comValor = peixes.filter((f) => f.valor_kg != null).length;
+  const trofeus = peixes.filter((f) => rarityClass(f.raridade) === "trofeu").length;
+  const stat = (n, label) => `<span class="stat"><b>${n}</b> ${label}</span>`;
+  el.innerHTML =
+    stat(locais.length, "pontos") +
+    stat(peixes.length, "peixes") +
+    stat(especies.size, "espécies") +
+    stat(trofeus, "troféus") +
+    stat(comValor, "com US$/kg");
+}
+
+function renderIndex(locais) {
+  const el = document.getElementById("localIndex");
+  if (!el) return;
+  el.innerHTML = locais.length
+    ? locais.map((l) => `<button class="chip" data-goto="loc-${esc(l.id)}">${esc(l.nome)} <span class="chip-n">${l.peixes.length}</span></button>`).join("")
+    : "";
 }
 
 function renderBest(locais) {
@@ -301,7 +417,10 @@ function renderBest(locais) {
 function renderSpot(loc, fishes) {
   const el = document.createElement("div");
   el.className = "spot";
+  el.id = "loc-" + loc.id;
   const region = loc.regiao ? ` · <span class="region">${esc(loc.regiao)}</span>` : "";
+  const nivel = loc.nivel ? ` · <span class="nivel">${esc(loc.nivel)}</span>` : "";
+  const guia = loc.guia ? `<div class="spot-guia">📖 ${esc(loc.guia)}</div>` : "";
   const rows = fishes.length
     ? fishes.map((f, i) => `
       <tr>
@@ -314,27 +433,26 @@ function renderSpot(loc, fishes) {
         </td>
         <td class="num price-cell">${fmtMoney(f.valor_kg)}</td>
         <td class="num xp-cell">${fmtXp(f.xp_kg)}</td>
+        <td class="per-cell">${periodoBadge(f.periodo)}</td>
         <td class="cell-isca">${esc(f.isca) || "—"}</td>
         <td class="cell-vara">${esc(f.tipo_vara) || "—"}</td>
         <td class="time">${fmtTime(f.horario_inicio, f.horario_fim)}</td>
         <td class="num"><button class="del" data-action="delFish" data-local="${esc(loc.id)}" data-id="${esc(f.id)}" title="Remover">✕</button></td>
       </tr>`).join("")
-    : `<tr><td colspan="8" class="empty">Nenhum peixe cadastrado ainda.</td></tr>`;
+    : `<tr><td colspan="${COLUMNS.length}" class="empty">Nenhum peixe cadastrado ainda.</td></tr>`;
 
   el.innerHTML = `
     <div class="spot-head">
       <div>
         <h2>🌊 ${esc(loc.nome)}</h2>
-        <span class="meta">${loc.peixes.length} peixe(s)${region}</span>
+        <span class="meta">${loc.peixes.length} peixe(s)${region}${nivel}</span>
       </div>
       <button class="btn ghost small" data-action="delLocal" data-local="${esc(loc.id)}">Remover ponto</button>
     </div>
+    ${guia}
     <div class="table-scroll">
       <table>
-        <thead><tr>
-          <th class="rank">#</th><th>Peixe</th><th class="num">US$/kg</th><th class="num">XP/kg</th>
-          <th>Isca</th><th>Vara</th><th>Horário</th><th></th>
-        </tr></thead>
+        <thead>${thead()}</thead>
         <tbody>${rows}</tbody>
       </table>
     </div>`;
@@ -350,4 +468,5 @@ function renderSpot(loc, fishes) {
 if (typeof document !== "undefined") main();
 
 // Exportado para testes (ignorado pelo navegador).
-export { esc, fmtMoney, fmtXp, fmtTime, rarityClass, rarityRank, SORTERS, LocalStore };
+export { esc, fmtMoney, fmtXp, fmtTime, rarityClass, rarityRank, LocalStore,
+         cmpFactory, sortValue, timeToMin, periodoBadge };

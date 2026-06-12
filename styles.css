@@ -42,7 +42,20 @@ h1 { margin: 0 0 6px; font-size: 1.7rem; }
 .highlight .price { color: var(--gold); font-weight: 700; }
 .highlight .where { color: var(--muted); font-size: 0.9rem; }
 
-.controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.stats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.stats .stat { background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; font-size: 0.82rem; color: var(--muted); }
+.stats .stat b { color: var(--text); font-size: 0.95rem; }
+
+.local-index { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.chip { background: #112236; border: 1px solid var(--line); color: var(--text); border-radius: 999px; padding: 6px 12px; font-size: 0.85rem; cursor: pointer; }
+.chip:hover { border-color: var(--accent); }
+.chip-n { color: var(--muted); font-size: 0.78rem; }
+
+.spot.flash { animation: flash 0.9s ease; }
+@keyframes flash { 0% { box-shadow: 0 0 0 2px var(--accent); } 100% { box-shadow: none; } }
+
+.controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
+.hint { color: var(--muted); font-size: 0.78rem; }
 input, select {
   background: var(--card); border: 1px solid var(--line);
   color: var(--text); padding: 10px 12px; border-radius: 10px;
@@ -65,14 +78,24 @@ input[type="search"] { flex: 1 1 240px; }
 .spot-head h2 { margin: 0; font-size: 1.1rem; }
 .spot-head .meta { color: var(--muted); font-size: 0.82rem; }
 .spot-head .region { color: var(--blue); }
+.spot-head .nivel { color: var(--gold); }
+.spot-guia { color: var(--muted); font-size: 0.86rem; padding: 10px 16px; background: #122941; border-top: 1px solid var(--line); line-height: 1.45; }
 
 .table-scroll { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; min-width: 720px; }
+table { width: 100%; border-collapse: collapse; min-width: 840px; }
 th, td { padding: 10px 12px; text-align: left; vertical-align: top; }
 thead th { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+thead th.sortable { cursor: pointer; user-select: none; }
+thead th.sortable:hover { color: var(--text); }
+thead th.sortable.active { color: var(--accent); }
 th.num, td.num { text-align: right; }
 tbody tr { border-top: 1px solid var(--line); }
 tbody tr:hover { background: #1a2d47; }
+.per-cell { white-space: nowrap; }
+.per { display: inline-block; font-size: 0.74rem; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.per-dia   { background: #3a3412; color: #f0d488; }
+.per-noite { background: #1c2236; color: #9fb3e0; }
+.per-ambos { background: #16323a; color: #8fd6e3; }
 .price-cell { color: var(--gold); font-weight: 700; white-space: nowrap; }
 .xp-cell { color: var(--blue); white-space: nowrap; }
 .fish-name { font-weight: 600; }
