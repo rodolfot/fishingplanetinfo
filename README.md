@@ -27,11 +27,15 @@ ponto de pesca**.
 
 ## Cobertura atual dos dados de exemplo
 
-**5 águas / ~36 peixes**: Rio Mudwater (MO), Pesqueiro Lesni Vila (CZ), Emerald
-Lake (NY), Lone Star Lake (TX) e Quanchkin Lake (LA). O jogo tem ~26+ águas e
+**9 águas / 67 peixes**: Rio Mudwater (MO), Pesqueiro Lesni Vila (CZ), Emerald
+Lake (NY), Lone Star Lake (TX), Quanchkin Lake (LA), Rocky Lake (CO), Neherrin
+River (NC), Everglades (FL) e Akhtuba River (Rússia). O jogo tem ~26+ águas e
 ~170+ espécies — o objetivo é a **comunidade preencher o resto**. Valores de
 US$/kg confiáveis foram preenchidos; onde não havia dado, o campo fica em branco
 (em vez de inventar número).
+
+> Os SQLs de seed são **gerados** de `seed.js` (fonte única) por
+> `node scripts/gen-sql.mjs` — não edite os `.sql` à mão.
 
 ---
 
@@ -90,14 +94,16 @@ variáveis no seu fluxo de deploy).
 
 ## 🗂️ Estrutura
 
-```
+```text
 index.html          estrutura da página
 styles.css          tema escuro
 app.js              lógica + camada de dados plugável (Supabase | localStorage)
 config.js           credenciais do Supabase (vazio = modo local)
-seed.js             dados de exemplo (modo local)
-supabase/schema.sql tabelas + RLS
-supabase/seed.sql   dados de exemplo (modo colaborativo)
+seed.js             dados de exemplo (FONTE ÚNICA — modo local)
+scripts/gen-sql.mjs gera os .sql a partir de seed.js
+supabase/schema.sql tabelas + RLS + migração idempotente
+supabase/seed.sql        dados de exemplo (projeto novo) — GERADO
+supabase/seed-extra.sql  só as águas novas (projeto reaproveitado) — GERADO
 ```
 
 ### Modelo de dados
