@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎣 Fishing Planet Info — Repositório colaborativo</title>
+  <meta name="description" content="Repositório colaborativo de informações do jogo Fishing Planet: pontos de pesca, peixes, valor por kg, XP, iscas, varas e horários.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🎣 Fishing Planet Info</h1>
+    <div class="sub">Repositório colaborativo: pontos, peixes, iscas, varas e horários. Todos podem adicionar e remover.</div>
+  </header>
+
+  <div id="modeBanner" class="mode-banner" hidden></div>
+
+  <div class="highlight" id="best"></div>
+
+  <form class="panel" id="addLocalForm">
+    <input type="text" id="localName" placeholder="Nome do ponto de pesca (ex: Rio Mudwater)" required>
+    <input type="text" id="localRegion" placeholder="Região / país (opcional)">
+    <button class="btn" type="submit">+ Adicionar ponto</button>
+  </form>
+
+  <div class="controls">
+    <input type="search" id="search" placeholder="Buscar peixe, ponto, isca ou vara...">
+    <select id="sort" aria-label="Ordenar">
+      <option value="price-desc">Maior preço/kg</option>
+      <option value="price-asc">Menor preço/kg</option>
+      <option value="xp-desc">Maior XP/kg</option>
+      <option value="name-asc">Nome (A–Z)</option>
+      <option value="rarity">Raridade</option>
+    </select>
+  </div>
+
+  <div id="locais"><div class="empty">Carregando…</div></div>
+
+  <div class="toolbar">
+    <button class="btn ghost small" id="resetBtn">Restaurar exemplo</button>
+  </div>
+
+  <footer>
+    <div>Valores em <strong>US$/kg</strong> e <strong>XP/kg</strong>. Horários no relógio do jogo (24h).</div>
+    <div id="footMode" class="foot-mode"></div>
+    <div class="foot-credits">Dados da comunidade (Fishing Planet Wiki / guias). Colabore corrigindo o que estiver errado.</div>
+  </footer>
+</div>
+
+<!-- Template do formulário de adicionar peixe (clonado por ponto) -->
+<template id="addFishTpl">
+  <form class="add-fish" data-role="addFish">
+    <div class="ff grow"><label>Peixe *</label><input name="nome" type="text" placeholder="Ex: Black Bass" required></div>
+    <div class="ff grow"><label>Nome científico</label><input name="nome_cientifico" type="text" placeholder="Ex: Micropterus salmoides"></div>
+    <div class="ff"><label>Raridade</label>
+      <select name="raridade">
+        <option value="comum">comum</option>
+        <option value="jovem">jovem</option>
+        <option value="troféu">troféu</option>
+      </select>
+    </div>
+    <div class="ff sm"><label>US$/kg</label><input name="valor_kg" type="number" step="0.01" min="0" placeholder="—"></div>
+    <div class="ff sm"><label>XP/kg</label><input name="xp_kg" type="number" step="1" min="0" placeholder="—"></div>
+    <div class="ff grow"><label>Isca</label><input name="isca" type="text" placeholder="Ex: Minhocas, spinner"></div>
+    <div class="ff grow"><label>Tipo de vara</label><input name="tipo_vara" type="text" placeholder="Ex: Spinning leve"></div>
+    <div class="ff sm"><label>Horário de</label><input name="horario_inicio" type="time"></div>
+    <div class="ff sm"><label>até</label><input name="horario_fim" type="time"></div>
+    <div class="ff"><label>Profundidade/zona</label><input name="profundidade" type="text" placeholder="Ex: Fundo, margens"></div>
+    <div class="ff grow"><label>Observações</label><input name="obs" type="text" placeholder="Dicas extras"></div>
+    <div class="ff end"><button class="btn small" type="submit">+ Adicionar peixe</button></div>
+  </form>
+</template>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

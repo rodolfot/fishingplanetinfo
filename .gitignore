@@ -1,0 +1,19 @@
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+
+# Logs / temporários
+*.log
+node_modules/
+.cache/
+
+# NÃO ignoramos config.js: a chave anon do Supabase é pública por design (RLS).
+# Se preferir não versionar suas credenciais, descomente a linha abaixo e
+# mantenha um config.example.js no lugar:
+# config.js

@@ -1,0 +1,12 @@
+{
+  "name": "fishingplanetinfo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Repositório colaborativo de informações do jogo Fishing Planet (site estático, sem build).",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve ."
+  },
+  "license": "MIT"
+}
