@@ -46,6 +46,21 @@ h1 { margin: 0 0 6px; font-size: 1.7rem; }
 .stats .stat { background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; font-size: 0.82rem; color: var(--muted); }
 .stats .stat b { color: var(--text); font-size: 0.95rem; }
 
+.viewtoggle { display: inline-flex; gap: 0; margin-bottom: 16px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.vt { background: var(--card); color: var(--muted); border: none; padding: 8px 14px; cursor: pointer; font-size: 0.9rem; font-weight: 600; }
+.vt + .vt { border-left: 1px solid var(--line); }
+.vt.active { background: var(--accent); color: #07210f; }
+
+.species-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.species { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.species-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; }
+.species-name { font-weight: 700; font-size: 1.02rem; }
+.species-sci { color: var(--muted); font-style: italic; font-size: 0.78rem; }
+.species-meta { color: var(--muted); font-size: 0.84rem; margin-top: 6px; }
+.species-meta .price { color: var(--gold); font-weight: 700; }
+.species-locais { color: var(--blue); font-size: 0.82rem; margin-top: 6px; }
+.species-iscas { color: var(--muted); font-size: 0.82rem; margin-top: 4px; }
+
 .local-index { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
 .chip { background: #112236; border: 1px solid var(--line); color: var(--text); border-radius: 999px; padding: 6px 12px; font-size: 0.85rem; cursor: pointer; }
 .chip:hover { border-color: var(--accent); }

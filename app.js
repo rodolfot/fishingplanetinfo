@@ -207,6 +207,14 @@ function wireHandlers() {
     render();
   });
 
+  $("#viewToggle").addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-view]");
+    if (!b) return;
+    viewMode = b.dataset.view;
+    for (const btn of $("#viewToggle").querySelectorAll("button")) btn.classList.toggle("active", btn === b);
+    render();
+  });
+
   $("#localIndex").addEventListener("click", (e) => {
     const chip = e.target.closest("[data-goto]");
     if (!chip) return;
@@ -327,6 +335,7 @@ const COLUMNS = [
 ];
 
 let sortState = { key: "valor_kg", dir: "desc" };
+let viewMode = "locais"; // "locais" (por ponto) | "peixes" (enciclopédia por espécie)
 const DEFAULT_DIR = { valor_kg: "desc", xp_kg: "desc", raridade: "asc" }; // resto: asc
 
 const timeToMin = (t) => {
@@ -389,18 +398,75 @@ function periodoBadge(p) {
   return p ? esc(p) : "—";
 }
 
+// ---- enciclopédia (agrega por espécie em todas as águas) ---------------------
+function aggregateSpecies(locais) {
+  const map = new Map();
+  for (const loc of locais)
+    for (const f of loc.peixes) {
+      const key = (f.nome || "").toLowerCase().trim();
+      if (!key) continue;
+      let e = map.get(key);
+      if (!e) { e = { nome: f.nome, sci: "", locais: new Set(), periodos: new Set(), iscas: new Set(), raridades: new Set(), best: null }; map.set(key, e); }
+      if (!e.sci && f.nome_cientifico) e.sci = f.nome_cientifico;
+      e.locais.add(loc.nome);
+      if (f.periodo) e.periodos.add(f.periodo);
+      if (f.isca) e.iscas.add(f.isca);
+      if (f.raridade) e.raridades.add(f.raridade);
+      if (f.valor_kg != null && (e.best == null || Number(f.valor_kg) > e.best)) e.best = Number(f.valor_kg);
+    }
+  return [...map.values()];
+}
+
+function speciesCard(s) {
+  const locs = [...s.locais];
+  const periodos = [...s.periodos].sort().map(periodoBadge).join(" ") || "—";
+  const rar = [...s.raridades].map(rarityTag).join("");
+  const iscas = [...s.iscas].slice(0, 6).map(esc).join(" · ");
+  return `<div class="species">
+    <div class="species-head">
+      <span class="species-name">${esc(s.nome)}</span>${rar}
+      ${s.sci ? `<span class="species-sci">${esc(s.sci)}</span>` : ""}
+    </div>
+    <div class="species-meta">Aparece em <b>${locs.length}</b> ponto(s) · melhor
+      <span class="price">${fmtMoney(s.best)}</span>/kg · ${periodos}</div>
+    <div class="species-locais">📍 ${locs.map(esc).join(", ")}</div>
+    ${iscas ? `<div class="species-iscas">🪱 ${iscas}</div>` : ""}
+  </div>`;
+}
+
+function renderEncyclopedia(container, locais, q) {
+  let species = aggregateSpecies(locais);
+  if (q) species = species.filter((s) =>
+    [s.nome, s.sci, ...s.iscas].some((x) => (x || "").toLowerCase().includes(q)) ||
+    [...s.periodos].some((p) => p.toLowerCase().includes(q)) ||
+    [...s.locais].some((l) => l.toLowerCase().includes(q)));
+  const v = (x) => (x == null ? -Infinity : x);
+  const byValue = sortState.key === "valor_kg" || sortState.key === "xp_kg";
+  species.sort((a, b) => byValue ? (v(b.best) - v(a.best)) || collator.compare(a.nome, b.nome) : collator.compare(a.nome, b.nome));
+  container.innerHTML = species.length
+    ? `<div class="species-grid">${species.map(speciesCard).join("")}</div>`
+    : `<div class="empty">Nada encontrado para "${esc(q)}".</div>`;
+}
+
 // ---- render ------------------------------------------------------------------
 function render() {
   const locais = store?.getLocais() ?? [];
   renderBest(locais);
   renderStats(locais);
-  renderIndex(locais);
 
   const q = $("#search").value.trim().toLowerCase();
-  const sorter = cmpFactory(sortState.key, sortState.dir);
   const container = $("#locais");
-  container.innerHTML = "";
+  // controles que só fazem sentido no modo "por ponto"
+  const porPonto = viewMode === "locais";
+  $("#localIndex").hidden = !porPonto;
+  const hint = document.getElementById("sortHint");
+  if (hint) hint.style.visibility = porPonto ? "visible" : "hidden";
 
+  if (porPonto) renderIndex(locais);
+  else { renderEncyclopedia(container, locais, q); return; }
+
+  const sorter = cmpFactory(sortState.key, sortState.dir);
+  container.innerHTML = "";
   const matchFish = (f) =>
     [f.nome, f.nome_cientifico, f.isca, f.tipo_vara, f.periodo].some((x) => (x || "").toLowerCase().includes(q));
 
@@ -517,4 +583,4 @@ if (typeof document !== "undefined") main();
 
 // Exportado para testes (ignorado pelo navegador).
 export { esc, fmtMoney, fmtXp, fmtTime, rarityClass, rarityRank, LocalStore,
-         cmpFactory, sortValue, timeToMin, periodoBadge };
+         cmpFactory, sortValue, timeToMin, periodoBadge, aggregateSpecies };

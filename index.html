@@ -38,7 +38,12 @@
       <option value="raridade:asc">Raridade (troféu→)</option>
       <option value="periodo:asc">Período (dia/noite)</option>
     </select>
-    <span class="hint">↕ ou clique no cabeçalho da coluna para ordenar</span>
+    <span class="hint" id="sortHint">↕ ou clique no cabeçalho da coluna para ordenar</span>
+  </div>
+
+  <div class="viewtoggle" id="viewToggle">
+    <button class="vt active" type="button" data-view="locais">🌊 Por ponto</button>
+    <button class="vt" type="button" data-view="peixes">🐟 Por peixe</button>
   </div>
 
   <div id="localIndex" class="local-index"></div>
