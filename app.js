@@ -71,6 +71,13 @@ class LocalStore {
     loc.peixes.push({ id: uid(), local_id: localId, criado_em: new Date().toISOString(), ...fish });
     this.persist();
   }
+  async updatePeixe(localId, fishId, fish) {
+    const loc = this.locais.find((l) => String(l.id) === String(localId));
+    const i = loc?.peixes.findIndex((p) => String(p.id) === String(fishId)) ?? -1;
+    if (i < 0) return;
+    loc.peixes[i] = { ...loc.peixes[i], ...fish };
+    this.persist();
+  }
   async delPeixe(localId, fishId) {
     const loc = this.locais.find((l) => String(l.id) === String(localId));
     if (loc) loc.peixes = loc.peixes.filter((p) => String(p.id) !== String(fishId));
@@ -120,6 +127,14 @@ class SupabaseStore {
     if (error) throw new Error(error.message);
     this.locais.find((l) => String(l.id) === String(localId))?.peixes.push(data);
   }
+  async updatePeixe(localId, fishId, fish) {
+    const { data, error } = await this.client
+      .from("peixes").update(fish).eq("id", fishId).select().single();
+    if (error) throw new Error(error.message);
+    const loc = this.locais.find((l) => String(l.id) === String(localId));
+    const i = loc?.peixes.findIndex((p) => String(p.id) === String(fishId)) ?? -1;
+    if (i >= 0) loc.peixes[i] = data;
+  }
   async delPeixe(localId, fishId) {
     const { error } = await this.client.from("peixes").delete().eq("id", fishId);
     if (error) throw new Error(error.message);
@@ -134,7 +149,9 @@ let store = null;
 
 async function main() {
   wireHandlers();
-  const wantsCloud = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
+  // ?local na URL força o modo local (demo offline), mesmo com Supabase configurado.
+  const forceLocal = new URLSearchParams(window.location?.search || "").has("local");
+  const wantsCloud = !forceLocal && !!(SUPABASE_URL && SUPABASE_ANON_KEY);
   try {
     store = wantsCloud ? await SupabaseStore.create() : new LocalStore();
     await store.init();
@@ -211,6 +228,8 @@ function wireHandlers() {
   // delegação para botões e formulários gerados dinamicamente
   const locais = $("#locais");
   locais.addEventListener("click", async (e) => {
+    // cancelar edição em andamento -> re-renderiza limpando o formulário
+    if (e.target.closest('[data-role="cancelEdit"]')) { render(); return; }
     // ordenar ao clicar no cabeçalho da coluna
     const th = e.target.closest("th[data-sort-key]");
     if (th) { setSort(th.dataset.sortKey); render(); return; }
@@ -224,6 +243,11 @@ function wireHandlers() {
     } else if (action === "delFish") {
       await guard(() => store.delPeixe(local, id));
       render();
+    } else if (action === "editFish") {
+      const loc = store.getLocais().find((l) => String(l.id) === String(local));
+      const fish = loc?.peixes.find((p) => String(p.id) === String(id));
+      const form = btn.closest(".spot")?.querySelector('form[data-role="addFish"]');
+      if (fish && form) startEditFish(form, fish);
     }
   });
   locais.addEventListener("submit", async (e) => {
@@ -234,9 +258,30 @@ function wireHandlers() {
     if (!fish.nome) return;
     const submitBtn = form.querySelector("button[type=submit]");
     if (submitBtn) submitBtn.disabled = true;
-    await guard(() => store.addPeixe(form.dataset.local, fish));
+    const editId = form.dataset.editId;
+    if (editId) await guard(() => store.updatePeixe(form.dataset.local, editId, fish));
+    else await guard(() => store.addPeixe(form.dataset.local, fish));
     render();
   });
+}
+
+// pré-preenche o formulário do ponto com os dados do peixe para edição in-place
+function startEditFish(form, fish) {
+  form.dataset.editId = String(fish.id);
+  const set = (n, v) => { if (form.elements[n]) form.elements[n].value = v ?? ""; };
+  set("nome", fish.nome); set("nome_cientifico", fish.nome_cientifico);
+  set("raridade", fish.raridade || "comum"); set("periodo", fish.periodo || "");
+  set("valor_kg", fish.valor_kg); set("xp_kg", fish.xp_kg);
+  set("isca", fish.isca); set("tipo_vara", fish.tipo_vara);
+  set("horario_inicio", fish.horario_inicio); set("horario_fim", fish.horario_fim);
+  set("profundidade", fish.profundidade); set("obs", fish.obs);
+  form.classList.add("editing");
+  const submitBtn = form.querySelector("button[type=submit]");
+  if (submitBtn) submitBtn.textContent = "Salvar alterações";
+  const cancel = form.querySelector('[data-role="cancelEdit"]');
+  if (cancel) cancel.hidden = false;
+  form.scrollIntoView({ behavior: "smooth", block: "center" });
+  form.elements["nome"]?.focus();
 }
 
 async function guard(fn) {
@@ -437,7 +482,10 @@ function renderSpot(loc, fishes) {
         <td class="cell-isca">${esc(f.isca) || "—"}</td>
         <td class="cell-vara">${esc(f.tipo_vara) || "—"}</td>
         <td class="time">${fmtTime(f.horario_inicio, f.horario_fim)}</td>
-        <td class="num"><button class="del" data-action="delFish" data-local="${esc(loc.id)}" data-id="${esc(f.id)}" title="Remover">✕</button></td>
+        <td class="num acoes">
+          <button class="edit" data-action="editFish" data-local="${esc(loc.id)}" data-id="${esc(f.id)}" title="Editar">✎</button>
+          <button class="del" data-action="delFish" data-local="${esc(loc.id)}" data-id="${esc(f.id)}" title="Remover">✕</button>
+        </td>
       </tr>`).join("")
     : `<tr><td colspan="${COLUMNS.length}" class="empty">Nenhum peixe cadastrado ainda.</td></tr>`;
 

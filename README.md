@@ -20,6 +20,7 @@ ponto de pesca**.
   Isca, Vara, Horário) para ordenar — alterna ▲/▼. Vazios sempre por último.
   Também há um seletor (inclui ordenar por raridade).
 - **Busca** por peixe, ponto, isca, vara ou período.
+- **Adicionar / editar / remover** peixes (✎ edita o registro in-place; ✕ remove).
 - **Barra de estatísticas** (pontos, peixes, espécies, troféus) e **índice** de
   pontos para navegação rápida.
 - **Destaque "compensa mais"** (maior US$/kg).
@@ -37,6 +38,7 @@ US$/kg confiáveis foram preenchidos; onde não havia dado, o campo fica em bran
 ## ▶️ Como rodar
 
 ### Modo local (na hora, sem nada)
+
 Como usa ES modules, sirva a pasta por HTTP (não abra via `file://`):
 
 ```bash
@@ -46,24 +48,32 @@ npx serve .
 python -m http.server 8000
 ```
 
-Abra `http://localhost:8000`. Já vem com **dados de exemplo pesquisados** (Rio
-Mudwater e Pesqueiro Lesni Vila). Nesse modo os dados ficam **só no seu navegador**
-(`localStorage`).
+Abra `http://localhost:8000`. Já vem com **dados de exemplo pesquisados** (5 águas).
+Nesse modo os dados ficam **só no seu navegador** (`localStorage`).
 
+> **Dica:** mesmo com o Supabase configurado, adicione **`?local`** na URL
+> (`http://localhost:8000/?local`) para ver a demo offline com os 5 lagos de exemplo.
+>
 > No VS Code dá pra usar a extensão **Live Server** também.
 
 ### Modo colaborativo (todos compartilham os dados) — Supabase
-1. Crie um projeto grátis em **https://supabase.com**.
-2. No **SQL Editor**, rode **`supabase/schema.sql`** (e, se quiser os dados de
-   exemplo, **`supabase/seed.sql`**).
-3. Em **Project Settings → API**, copie a **Project URL** e a chave **anon public**.
-4. Cole as duas em **`config.js`**:
-   ```js
-   export const SUPABASE_URL = "https://SEUPROJ.supabase.co";
-   export const SUPABASE_ANON_KEY = "eyJhbGci...";
-   ```
-5. Recarregue. O site mostra **"☁️ Modo colaborativo"** e passa a ler/gravar no
+
+Este repositório já vem **apontando para um projeto Supabase existente** (em
+`config.js`). Para deixar 100% funcional, rode a migração uma vez:
+
+1. Abra o projeto no Supabase → **SQL Editor**.
+2. Rode **`supabase/schema.sql`** — é **idempotente**: cria as tabelas se não
+   existirem e faz `add column if not exists` das colunas novas (`periodo`,
+   `nivel`, `guia`, `isca`, `tipo_vara`, etc.) **sem apagar dados**.
+3. (Opcional) Popular dados de exemplo:
+   - Projeto **novo/vazio** → `supabase/seed.sql` (as 5 águas).
+   - Projeto que **já tem** "Rio Mudwater"/"Pesqueiro Lesni Vila" →
+     `supabase/seed-extra.sql` (só as 3 águas novas, **sem duplicar**).
+4. Recarregue. O site mostra **"☁️ Modo colaborativo"** e passa a ler/gravar no
    banco compartilhado.
+
+Para usar **outro** projeto, troque `SUPABASE_URL`/`SUPABASE_ANON_KEY` em
+`config.js` (deixe `""`/`""` para voltar ao modo local).
 
 > Quer apontar para um Supabase **que já existe**? Basta colocar a URL/chave dele
 > em `config.js` — desde que as tabelas tenham as colunas do `schema.sql`.

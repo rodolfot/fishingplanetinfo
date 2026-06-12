@@ -35,10 +35,30 @@ create table if not exists public.peixes (
   criado_em       timestamptz not null default now()
 );
 
--- Migração: se as tabelas já existiam (versão anterior), adicione as colunas novas:
-alter table public.locais_pesca add column if not exists nivel text;
-alter table public.locais_pesca add column if not exists guia  text;
-alter table public.peixes        add column if not exists periodo text;
+-- ---------------------------------------------------------------------------
+--  MIGRAÇÃO (reaproveitar um projeto Supabase que JÁ existe)
+--  Seguro rodar mesmo se as tabelas já tinham dados: 'add column if not exists'
+--  só acrescenta o que falta, sem apagar nada. Cobre o esquema antigo do
+--  fishingplanetvalores (locais_pesca: id/nome/criado_em; peixes:
+--  id/local_id/nome/valor_kg/raridade/xp_kg).
+-- ---------------------------------------------------------------------------
+alter table public.locais_pesca add column if not exists regiao text;
+alter table public.locais_pesca add column if not exists nivel  text;
+alter table public.locais_pesca add column if not exists guia   text;
+alter table public.locais_pesca add column if not exists criado_em timestamptz not null default now();
+
+alter table public.peixes add column if not exists nome_cientifico text;
+alter table public.peixes add column if not exists raridade        text default 'comum';
+alter table public.peixes add column if not exists periodo         text;
+alter table public.peixes add column if not exists valor_kg        numeric(10,2);
+alter table public.peixes add column if not exists xp_kg           integer;
+alter table public.peixes add column if not exists isca            text;
+alter table public.peixes add column if not exists tipo_vara       text;
+alter table public.peixes add column if not exists horario_inicio  text;
+alter table public.peixes add column if not exists horario_fim     text;
+alter table public.peixes add column if not exists profundidade    text;
+alter table public.peixes add column if not exists obs             text;
+alter table public.peixes add column if not exists criado_em       timestamptz not null default now();
 
 create index if not exists peixes_local_id_idx on public.peixes (local_id);
 
