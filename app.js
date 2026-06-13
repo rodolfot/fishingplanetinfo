@@ -421,6 +421,7 @@ function renderSpot(loc, fishes) {
   el.id = "loc-" + loc.id;
   const region = loc.regiao ? ` · <span class="region">${esc(loc.regiao)}</span>` : "";
   const nivel = loc.nivel ? ` · <span class="nivel">${esc(loc.nivel)}</span>` : "";
+  const estimado = loc.estimado ? `<div class="spot-estimado" title="Lista de espécies estimada pela região, não confirmada no jogo">⚠️ Dados estimados — espécies típicas da região, ainda não confirmadas no jogo. Corrija no modo colaborativo.</div>` : "";
   const guia = loc.guia ? `<div class="spot-guia">📖 ${esc(loc.guia)}</div>` : "";
   const rows = fishes.length
     ? fishes.map((f, i) => `
@@ -453,6 +454,7 @@ function renderSpot(loc, fishes) {
       </div>
       <button class="btn ghost small" data-action="delLocal" data-local="${esc(loc.id)}">Remover ponto</button>
     </div>
+    ${estimado}
     ${guia}
     <div class="table-scroll">
       <table>

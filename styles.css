@@ -55,6 +55,9 @@ h1 { margin: 0 0 6px; font-size: 1.7rem; }
 .pop-val { margin-left: auto; color: var(--gold); font-weight: 700; font-size: 0.82rem; white-space: nowrap; }
 .pop-fish-meta { font-size: 0.76rem; color: var(--muted); line-height: 1.5; margin-top: 2px; }
 .pop-links { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+.pop-estimado { font-size: 0.72rem; color: #f0c674; background: #2c2410; border: 1px solid #4a3d12; border-radius: 6px; padding: 3px 6px; margin-top: 4px; }
+.badge-est { font-size: 0.66rem; color: #f0c674; background: #2c2410; border: 1px solid #4a3d12; border-radius: 999px; padding: 1px 6px; vertical-align: middle; }
+.spot-estimado { font-size: 0.82rem; color: #f0c674; background: #2c2410; border: 1px solid #4a3d12; border-radius: 8px; padding: 6px 10px; margin: 8px 0; }
 .sec { font-size: 1.15rem; margin: 18px 0 10px; }
 .country { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 6px 0 2px; margin-bottom: 14px; overflow: hidden; }
 .country h3 { margin: 8px 14px; font-size: 1rem; }

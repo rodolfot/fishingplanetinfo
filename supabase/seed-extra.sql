@@ -4,14 +4,23 @@
 --  Rode DEPOIS do schema.sql.
 -- =============================================================================
 
-insert into public.locais_pesca (nome, regiao, nivel, guia, pais, lat, lng, preco_viagem, diaria) values
-  ('Emerald Lake', 'Nova York, EUA', 'Nível ~9–20', 'Lago de NY popular para subir de nível pegando Walleye (lance atrás das vitórias-régias, ~130–160 ft). Golden Shiner pega em qualquer lugar com spinners/spoons/shads. Pike perto das ervas com Shad 2" em stop-and-go (Dock of Peace).', 'EUA', 43, -75, null, 900),
-  ('Lone Star Lake', 'Texas, EUA', 'Nível 1+', 'Lago do Texas com quase uma dúzia de espécies. Minhocas/stink bait pegam bem; Red Worm no anzol #6. Spotted Bass rende bom dinheiro; Channel Catfish é abundante (noite).', 'EUA', 31, -99, null, null),
-  ('Quanchkin Lake', 'Louisiana, EUA', 'Nível ~10+', 'Pântano da Louisiana com predadores grandes. Alligator Gar exige leader de aço e anzol 6/0 com lagostim. Bagres (Channel/Flathead/Blue) à noite. Hotspots de Bowfin para troféu/único.', 'EUA', 30.5, -91.5, null, null),
-  ('Rocky Lake', 'Colorado, EUA', 'Nível ~8–20', 'Lago de montanha no Colorado, famoso pelas trutas (Rainbow é a mais popular pra dinheiro). Trutas com fly/spinning e iscas pequenas/colheres; Brown no fundo com lagostim/minnow. Pike e Smallmouth com crankbaits perto de pedras e vegetação.', 'EUA', 39, -105.5, null, null),
-  ('Neherrin River', 'Carolina do Norte, EUA', 'Nível 1+', 'Rio da Carolina do Norte com bass, panfish, carpa e shad. Iscas artificiais pra bass; minhocas/sanguessugas pros panfish; massa/milho pra carpa no fundo.', 'EUA', 35.5, -79, null, null),
-  ('Everglades', 'Flórida, EUA', 'Nível ~15+ (alto XP)', 'Pântano da Flórida com espécies exóticas de alto XP. Peacock Bass exige tackle pesado na vegetação (spoons/jigs médios; iscas grandes e lentas perto da cobertura). Snook com isca-viva sob boia. Florida Gar rende muito XP no pico de alimentação.', 'EUA', 25.9, -80.9, null, null),
-  ('Akhtuba River', 'Rússia', 'Nível ~20+ (avançado)', 'Rio russo com predadores grandes e esturjão. Wels Catfish e Beluga no fundo com anzol 4/0–7/0 e isca cortada grande. Zander à noite com jigs; Asp na superfície de dia.', 'Rússia', 48.7, 44.8, null, null);
+insert into public.locais_pesca (nome, regiao, nivel, guia, pais, lat, lng, preco_viagem, diaria, estimado) values
+  ('Emerald Lake', 'Nova York, EUA', 'Nível ~9–20', 'Lago de NY popular para subir de nível pegando Walleye (lance atrás das vitórias-régias, ~130–160 ft). Golden Shiner pega em qualquer lugar com spinners/spoons/shads. Pike perto das ervas com Shad 2" em stop-and-go (Dock of Peace).', 'EUA', 43, -75, null, 900, false),
+  ('Lone Star Lake', 'Texas, EUA', 'Nível 1+', 'Lago do Texas com quase uma dúzia de espécies. Minhocas/stink bait pegam bem; Red Worm no anzol #6. Spotted Bass rende bom dinheiro; Channel Catfish é abundante (noite).', 'EUA', 31, -99, null, null, false),
+  ('Quanchkin Lake', 'Louisiana, EUA', 'Nível ~10+', 'Pântano da Louisiana com predadores grandes. Alligator Gar exige leader de aço e anzol 6/0 com lagostim. Bagres (Channel/Flathead/Blue) à noite. Hotspots de Bowfin para troféu/único.', 'EUA', 30.5, -91.5, null, null, false),
+  ('Rocky Lake', 'Colorado, EUA', 'Nível ~8–20', 'Lago de montanha no Colorado, famoso pelas trutas (Rainbow é a mais popular pra dinheiro). Trutas com fly/spinning e iscas pequenas/colheres; Brown no fundo com lagostim/minnow. Pike e Smallmouth com crankbaits perto de pedras e vegetação.', 'EUA', 39, -105.5, null, null, false),
+  ('Neherrin River', 'Carolina do Norte, EUA', 'Nível 1+', 'Rio da Carolina do Norte com bass, panfish, carpa e shad. Iscas artificiais pra bass; minhocas/sanguessugas pros panfish; massa/milho pra carpa no fundo.', 'EUA', 35.5, -79, null, null, false),
+  ('Everglades', 'Flórida, EUA', 'Nível ~15+ (alto XP)', 'Pântano da Flórida com espécies exóticas de alto XP. Peacock Bass exige tackle pesado na vegetação (spoons/jigs médios; iscas grandes e lentas perto da cobertura). Snook com isca-viva sob boia. Florida Gar rende muito XP no pico de alimentação.', 'EUA', 25.9, -80.9, null, null, false),
+  ('Akhtuba River', 'Rússia', 'Nível ~20+ (avançado)', 'Rio russo com predadores grandes e esturjão. Wels Catfish e Beluga no fundo com anzol 4/0–7/0 e isca cortada grande. Zander à noite com jigs; Asp na superfície de dia.', 'Rússia', 48.7, 44.8, null, null, false),
+  ('Falcon Lake', 'Oregon, EUA', 'Nível ~5–20', 'Lago de Oregon com trutas e black bass. (Lista de espécies estimada pela região — confirme e corrija no jogo.)', 'EUA', 43.8, -121.4, null, null, true),
+  ('San Joaquin Delta', 'Califórnia, EUA', 'Nível ~10–25', 'Delta da Califórnia: bass, bagres e o gigante White Sturgeon. (Lista de espécies estimada pela região — confirme e corrija no jogo.)', 'EUA', 38, -121.5, null, null, true),
+  ('Saint Croix Lake', 'Michigan, EUA', 'Nível ~10–30', 'Lago de Michigan com walleye, pike e o troféu Muskellunge. (Lista de espécies estimada pela região — confirme e corrija no jogo.)', 'EUA', 45.5, -84.5, null, null, true),
+  ('White Moose Lake', 'Alberta, Canadá', 'Nível ~15–30', 'Lago canadense frio: trutas grandes, pike e whitefish. (Lista de espécies estimada pela região — confirme e corrija no jogo.)', 'Canadá', 52.5, -114, null, null, true),
+  ('Kaniq Creek', 'Alasca, EUA', 'Nível ~20–35', 'Rio do Alasca na corrida dos salmões; trutas e char no meio. (Lista de espécies estimada pela região — confirme e corrija no jogo.)', 'EUA', 60.5, -151, null, null, true),
+  ('Blue Crab Island', 'Mississippi, EUA (Golfo)', 'Nível ~20–35', 'Água salgada do Golfo do México: drum, trout e o troféu Tarpon. (Lista de espécies estimada pela região — confirme e corrija no jogo.)', 'EUA', 30.3, -88.9, null, null, true),
+  ('Lago Ladoga', 'Carélia, Rússia', 'Nível ~20–35', 'Maior lago da Europa: pike, zander, salmão e truta marrom. (Lista de espécies estimada pela região — confirme e corrija no jogo.)', 'Rússia', 61, 31.5, null, null, true),
+  ('Rio Volkhov', 'Rússia', 'Nível ~20–35', 'Rio russo com zander, asp e o gigante Wels Catfish. (Lista de espécies estimada pela região — confirme e corrija no jogo.)', 'Rússia', 58.5, 31.3, null, null, true),
+  ('Mar da Noruega', 'Noruega (mar)', 'Nível ~25–40', 'Pesca de barco no mar da Noruega: bacalhau, saithe e halibut troféu. (Lista de espécies estimada pela região — confirme e corrija no jogo.)', 'Noruega', 69.5, 18, null, null, true);
 
 -- Emerald Lake
 with l as (select id from public.locais_pesca where nome = 'Emerald Lake')
@@ -105,4 +114,139 @@ select l.id, v.* from l cross join (values
   ('Northern Pike','Esox lucius','comum','ambos',150,30,'Iscas artificiais','Spinning médio com leader de aço','05:00','08:00','Vegetação',null,true),
   ('Common Bream','Abramis brama','comum','diurno',80,30,'Minhocas, massa','Feeder','08:00','16:00','Fundo',null,true),
   ('Caspian Roach','Rutilus caspicus','comum','diurno',70,30,'Minhocas, massa','Boia leve','08:00','16:00','Meia-água',null,true)
+) as v(nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs,aprox);
+
+-- Falcon Lake
+with l as (select id from public.locais_pesca where nome = 'Falcon Lake')
+insert into public.peixes (local_id, nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs,aprox)
+select l.id, v.* from l cross join (values
+  ('Rainbow Trout',null,'comum','ambos',169,30,'Spinners, colheres, fly, iscas pequenas','Spinning leve / fly','05:00','09:00','Meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Cutthroat Trout',null,'comum','ambos',164,30,'Spinners, colheres, fly, iscas pequenas','Spinning leve / fly','05:00','09:00','Meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Brown Trout',null,'comum','ambos',150,30,'Spinners, colheres, fly, iscas pequenas','Spinning leve / fly','05:00','09:00','Meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Brook Trout',null,'comum','ambos',150,30,'Spinners, colheres, fly, iscas pequenas','Spinning leve / fly','05:00','09:00','Meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Smallmouth Bass',null,'comum','ambos',160,30,'Iscas artificiais (soft plastic, crankbait, spinnerbait)','Casting médio','05:00','08:00','Vegetação e estruturas','Espécie típica da região — não confirmada no jogo.',true),
+  ('Largemouth Bass',null,'comum','ambos',150,30,'Iscas artificiais (soft plastic, crankbait, spinnerbait)','Casting médio','05:00','08:00','Vegetação e estruturas','Espécie típica da região — não confirmada no jogo.',true),
+  ('Black Crappie',null,'comum','diurno',115,30,'Minhocas, maggots, jigs pequenos','Vara de boia leve','08:00','16:00','Margens / meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Bluegill',null,'comum','diurno',100,30,'Minhocas, maggots, jigs pequenos','Vara de boia leve','08:00','16:00','Margens / meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Channel Catfish',null,'comum','noturno',45,30,'Isca cortada / minhocão no fundo','Bottom/feeder','21:00','03:00','Fundo','Espécie típica da região — não confirmada no jogo.',true)
+) as v(nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs,aprox);
+
+-- San Joaquin Delta
+with l as (select id from public.locais_pesca where nome = 'San Joaquin Delta')
+insert into public.peixes (local_id, nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs,aprox)
+select l.id, v.* from l cross join (values
+  ('Largemouth Bass',null,'comum','ambos',150,30,'Iscas artificiais (soft plastic, crankbait, spinnerbait)','Casting médio','05:00','08:00','Vegetação e estruturas','Espécie típica da região — não confirmada no jogo.',true),
+  ('Smallmouth Bass',null,'comum','ambos',160,30,'Iscas artificiais (soft plastic, crankbait, spinnerbait)','Casting médio','05:00','08:00','Vegetação e estruturas','Espécie típica da região — não confirmada no jogo.',true),
+  ('Spotted Bass',null,'comum','ambos',170,30,'Iscas artificiais (soft plastic, crankbait, spinnerbait)','Casting médio','05:00','08:00','Vegetação e estruturas','Espécie típica da região — não confirmada no jogo.',true),
+  ('Striped Bass',null,'comum','ambos',150,30,'Iscas artificiais (soft plastic, crankbait, spinnerbait)','Casting médio','05:00','08:00','Vegetação e estruturas','Espécie típica da região — não confirmada no jogo.',true),
+  ('Channel Catfish',null,'comum','noturno',45,30,'Isca cortada / minhocão no fundo','Bottom/feeder','21:00','03:00','Fundo','Espécie típica da região — não confirmada no jogo.',true),
+  ('White Catfish',null,'comum','noturno',45,30,'Isca cortada / minhocão no fundo','Bottom/feeder','21:00','03:00','Fundo','Espécie típica da região — não confirmada no jogo.',true),
+  ('Bluegill',null,'comum','diurno',100,30,'Minhocas, maggots, jigs pequenos','Vara de boia leve','08:00','16:00','Margens / meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Black Crappie',null,'comum','diurno',115,30,'Minhocas, maggots, jigs pequenos','Vara de boia leve','08:00','16:00','Margens / meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('White Sturgeon',null,'troféu','ambos',115,90,'Isca cortada grande no fundo','Bottom pesadíssimo','18:00','06:00','Fundo','Espécie típica da região — não confirmada no jogo.',true)
+) as v(nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs,aprox);
+
+-- Saint Croix Lake
+with l as (select id from public.locais_pesca where nome = 'Saint Croix Lake')
+insert into public.peixes (local_id, nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs,aprox)
+select l.id, v.* from l cross join (values
+  ('Walleye',null,'comum','ambos',200,30,'Jigs, shads, colheres','Spinning médio (leader de aço p/ esócideos)','05:00','08:00','Estruturas / vegetação','Espécie típica da região — não confirmada no jogo.',true),
+  ('Northern Pike',null,'comum','ambos',150,30,'Jigs, shads, colheres','Spinning médio (leader de aço p/ esócideos)','05:00','08:00','Estruturas / vegetação','Espécie típica da região — não confirmada no jogo.',true),
+  ('Muskellunge',null,'troféu','ambos',115,90,'Jigs, shads, colheres','Spinning médio (leader de aço p/ esócideos)','05:00','08:00','Estruturas / vegetação','Espécie típica da região — não confirmada no jogo.',true),
+  ('Smallmouth Bass',null,'comum','ambos',160,30,'Iscas artificiais (soft plastic, crankbait, spinnerbait)','Casting médio','05:00','08:00','Vegetação e estruturas','Espécie típica da região — não confirmada no jogo.',true),
+  ('Largemouth Bass',null,'comum','ambos',150,30,'Iscas artificiais (soft plastic, crankbait, spinnerbait)','Casting médio','05:00','08:00','Vegetação e estruturas','Espécie típica da região — não confirmada no jogo.',true),
+  ('Yellow Perch',null,'comum','diurno',120,30,'Minhocas, maggots, jigs pequenos','Vara de boia leve','08:00','16:00','Margens / meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Bluegill',null,'comum','diurno',100,30,'Minhocas, maggots, jigs pequenos','Vara de boia leve','08:00','16:00','Margens / meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Black Crappie',null,'comum','diurno',115,30,'Minhocas, maggots, jigs pequenos','Vara de boia leve','08:00','16:00','Margens / meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Lake Trout',null,'comum','ambos',160,30,'Spinners, colheres, fly, iscas pequenas','Spinning leve / fly','05:00','09:00','Meia-água','Espécie típica da região — não confirmada no jogo.',true)
+) as v(nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs,aprox);
+
+-- White Moose Lake
+with l as (select id from public.locais_pesca where nome = 'White Moose Lake')
+insert into public.peixes (local_id, nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs,aprox)
+select l.id, v.* from l cross join (values
+  ('Lake Trout',null,'comum','ambos',160,30,'Spinners, colheres, fly, iscas pequenas','Spinning leve / fly','05:00','09:00','Meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Rainbow Trout',null,'comum','ambos',169,30,'Spinners, colheres, fly, iscas pequenas','Spinning leve / fly','05:00','09:00','Meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Brook Trout',null,'comum','ambos',150,30,'Spinners, colheres, fly, iscas pequenas','Spinning leve / fly','05:00','09:00','Meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Northern Pike',null,'comum','ambos',150,30,'Jigs, shads, colheres','Spinning médio (leader de aço p/ esócideos)','05:00','08:00','Estruturas / vegetação','Espécie típica da região — não confirmada no jogo.',true),
+  ('Walleye',null,'comum','ambos',200,30,'Jigs, shads, colheres','Spinning médio (leader de aço p/ esócideos)','05:00','08:00','Estruturas / vegetação','Espécie típica da região — não confirmada no jogo.',true),
+  ('Yellow Perch',null,'comum','diurno',120,30,'Minhocas, maggots, jigs pequenos','Vara de boia leve','08:00','16:00','Margens / meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Lake Whitefish',null,'comum','ambos',100,30,'Spinners, colheres, fly, iscas pequenas','Spinning leve / fly','05:00','09:00','Meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Burbot',null,'comum','noturno',100,30,'Isca cortada / minhocão no fundo','Bottom/feeder','21:00','03:00','Fundo','Espécie típica da região — não confirmada no jogo.',true),
+  ('Mountain Whitefish',null,'comum','ambos',100,30,'Spinners, colheres, fly, iscas pequenas','Spinning leve / fly','05:00','09:00','Meia-água','Espécie típica da região — não confirmada no jogo.',true)
+) as v(nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs,aprox);
+
+-- Kaniq Creek
+with l as (select id from public.locais_pesca where nome = 'Kaniq Creek')
+insert into public.peixes (local_id, nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs,aprox)
+select l.id, v.* from l cross join (values
+  ('Chinook Salmon',null,'troféu','ambos',184,90,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Coho Salmon',null,'comum','ambos',160,30,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Sockeye Salmon',null,'comum','ambos',160,30,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Pink Salmon',null,'comum','ambos',160,30,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Chum Salmon',null,'comum','ambos',160,30,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Rainbow Trout',null,'comum','ambos',169,30,'Spinners, colheres, fly, iscas pequenas','Spinning leve / fly','05:00','09:00','Meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Dolly Varden',null,'comum','ambos',100,30,'Iscas variadas conforme a espécie','Spinning médio','06:00','12:00','Variada','Espécie típica da região — não confirmada no jogo.',true),
+  ('Arctic Grayling',null,'comum','ambos',100,30,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Arctic Char',null,'comum','ambos',100,30,'Spinners, colheres, fly, iscas pequenas','Spinning leve / fly','05:00','09:00','Meia-água','Espécie típica da região — não confirmada no jogo.',true)
+) as v(nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs,aprox);
+
+-- Blue Crab Island
+with l as (select id from public.locais_pesca where nome = 'Blue Crab Island')
+insert into public.peixes (local_id, nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs,aprox)
+select l.id, v.* from l cross join (values
+  ('Red Drum',null,'comum','ambos',100,30,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Black Drum',null,'comum','ambos',100,30,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Spotted Seatrout',null,'comum','ambos',160,30,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Southern Flounder',null,'comum','ambos',100,30,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Sheepshead',null,'comum','ambos',100,30,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Atlantic Croaker',null,'comum','ambos',100,30,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Sea Catfish',null,'comum','noturno',45,30,'Isca cortada / minhocão no fundo','Bottom/feeder','21:00','03:00','Fundo','Espécie típica da região — não confirmada no jogo.',true),
+  ('Snook',null,'comum','ambos',150,30,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Tarpon',null,'troféu','ambos',115,90,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true)
+) as v(nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs,aprox);
+
+-- Lago Ladoga
+with l as (select id from public.locais_pesca where nome = 'Lago Ladoga')
+insert into public.peixes (local_id, nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs,aprox)
+select l.id, v.* from l cross join (values
+  ('Northern Pike',null,'comum','ambos',150,30,'Jigs, shads, colheres','Spinning médio (leader de aço p/ esócideos)','05:00','08:00','Estruturas / vegetação','Espécie típica da região — não confirmada no jogo.',true),
+  ('Zander',null,'comum','ambos',180,30,'Jigs, shads, colheres','Spinning médio (leader de aço p/ esócideos)','05:00','08:00','Estruturas / vegetação','Espécie típica da região — não confirmada no jogo.',true),
+  ('European Perch',null,'comum','diurno',120,30,'Minhocas, maggots, jigs pequenos','Vara de boia leve','08:00','16:00','Margens / meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Common Bream',null,'comum','diurno',80,30,'Massa, milho, minhocas, bloodworms','Feeder / boia','06:00','12:00','Fundo / meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Common Roach',null,'comum','diurno',70,30,'Massa, milho, minhocas, bloodworms','Feeder / boia','06:00','12:00','Fundo / meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Atlantic Salmon',null,'comum','ambos',160,30,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Brown Trout',null,'comum','ambos',150,30,'Spinners, colheres, fly, iscas pequenas','Spinning leve / fly','05:00','09:00','Meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Burbot',null,'comum','noturno',100,30,'Isca cortada / minhocão no fundo','Bottom/feeder','21:00','03:00','Fundo','Espécie típica da região — não confirmada no jogo.',true),
+  ('Ruffe',null,'comum','diurno',100,30,'Minhocas, maggots, jigs pequenos','Vara de boia leve','08:00','16:00','Margens / meia-água','Espécie típica da região — não confirmada no jogo.',true)
+) as v(nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs,aprox);
+
+-- Rio Volkhov
+with l as (select id from public.locais_pesca where nome = 'Rio Volkhov')
+insert into public.peixes (local_id, nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs,aprox)
+select l.id, v.* from l cross join (values
+  ('Zander',null,'comum','ambos',180,30,'Jigs, shads, colheres','Spinning médio (leader de aço p/ esócideos)','05:00','08:00','Estruturas / vegetação','Espécie típica da região — não confirmada no jogo.',true),
+  ('Wels Catfish',null,'troféu','noturno',57,90,'Isca cortada / minhocão no fundo','Bottom/feeder','21:00','03:00','Fundo','Espécie típica da região — não confirmada no jogo.',true),
+  ('Asp',null,'comum','ambos',140,30,'Jigs, shads, colheres','Spinning médio (leader de aço p/ esócideos)','05:00','08:00','Estruturas / vegetação','Espécie típica da região — não confirmada no jogo.',true),
+  ('Ide',null,'comum','ambos',100,30,'Jigs, shads, colheres','Spinning médio (leader de aço p/ esócideos)','05:00','08:00','Estruturas / vegetação','Espécie típica da região — não confirmada no jogo.',true),
+  ('Common Bream',null,'comum','diurno',80,30,'Massa, milho, minhocas, bloodworms','Feeder / boia','06:00','12:00','Fundo / meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Northern Pike',null,'comum','ambos',150,30,'Jigs, shads, colheres','Spinning médio (leader de aço p/ esócideos)','05:00','08:00','Estruturas / vegetação','Espécie típica da região — não confirmada no jogo.',true),
+  ('European Perch',null,'comum','diurno',120,30,'Minhocas, maggots, jigs pequenos','Vara de boia leve','08:00','16:00','Margens / meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Common Roach',null,'comum','diurno',70,30,'Massa, milho, minhocas, bloodworms','Feeder / boia','06:00','12:00','Fundo / meia-água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Burbot',null,'comum','noturno',100,30,'Isca cortada / minhocão no fundo','Bottom/feeder','21:00','03:00','Fundo','Espécie típica da região — não confirmada no jogo.',true)
+) as v(nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs,aprox);
+
+-- Mar da Noruega
+with l as (select id from public.locais_pesca where nome = 'Mar da Noruega')
+insert into public.peixes (local_id, nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs,aprox)
+select l.id, v.* from l cross join (values
+  ('Atlantic Cod',null,'comum','ambos',100,30,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Coalfish (Saithe)',null,'comum','ambos',100,30,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Haddock',null,'comum','ambos',100,30,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Atlantic Halibut',null,'troféu','ambos',115,90,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Atlantic Mackerel',null,'comum','ambos',100,30,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Pollock',null,'comum','ambos',100,30,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Atlantic Wolffish',null,'comum','ambos',100,30,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Ling',null,'comum','ambos',100,30,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true),
+  ('Tusk',null,'comum','ambos',100,30,'Isca-viva, jigs pesados, peixe cortado','Boat / casting pesado','06:00','18:00','Fundo / coluna d''água','Espécie típica da região — não confirmada no jogo.',true)
 ) as v(nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs,aprox);

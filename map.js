@@ -10,7 +10,7 @@ const cr = (n) => (n == null || n === "" ? "—" : Number(n).toLocaleString("pt-
 const money = (n) => (n == null || n === "" ? null : Number(n).toLocaleString("pt-BR") + " cr/kg");
 const aprx = (f) => (f.aprox ? "~" : ""); // estimativa da comunidade
 const fmtTime = (a, b) => (a && b ? `${a}–${b}` : a || b || "");
-const FLAG = { "EUA": "🇺🇸", "República Tcheca": "🇨🇿", "Rússia": "🇷🇺" };
+const FLAG = { "EUA": "🇺🇸", "República Tcheca": "🇨🇿", "Rússia": "🇷🇺", "Canadá": "🇨🇦", "Noruega": "🇳🇴" };
 const flag = (p) => FLAG[p] || "🌍";
 
 // Período do peixe -> badge curto (mesma convenção da página de peixes).
@@ -105,6 +105,7 @@ function popupHtml(l) {
     <div class="pop-head">
       <b>${flag(l.pais)} ${esc(l.nome)}</b>
       <div class="muted small">${esc(l.regiao || l.pais || "")}${l.nivel ? " · " + esc(l.nivel) : ""}</div>
+      ${l.estimado ? '<div class="pop-estimado">⚠️ Espécies estimadas pela região — não confirmadas no jogo.</div>' : ""}
     </div>
     ${lic}
     ${guia}
@@ -134,7 +135,7 @@ function renderCountries(locais) {
             : "—";
           return `
           <tr>
-            <td><a href="index.html#loc-${esc(l.id)}">${esc(l.nome)}</a><div class="muted small">${esc(l.regiao || "")} · <a href="${wikiUrl(l)}" target="_blank" rel="noopener">fonte</a></div></td>
+            <td><a href="index.html#loc-${esc(l.id)}">${esc(l.nome)}</a>${l.estimado ? ' <span class="badge-est" title="Espécies estimadas pela região, não confirmadas">est.</span>' : ""}<div class="muted small">${esc(l.regiao || "")} · <a href="${wikiUrl(l)}" target="_blank" rel="noopener">fonte</a></div></td>
             <td>${esc(l.nivel || "—")}</td>
             <td class="num">${cr(l.preco_viagem)}</td>
             <td class="num">${cr(l.diaria)}</td>
