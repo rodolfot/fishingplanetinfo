@@ -10,17 +10,18 @@
 </head>
 <body>
 <div class="wrap">
-  <nav class="topnav">
-    <a href="index.html">🐟 Peixes</a>
-    <a href="mapa.html" class="active">🗺️ Mapa &amp; Licenças</a>
-  </nav>
-
-  <header>
-    <h1>🗺️ Mapa-múndi &amp; Licenças</h1>
-    <div class="sub">Onde fica cada ponto de pesca, o preço da viagem, a diária e como funcionam as licenças.</div>
+  <header class="appbar">
+    <div class="brand">🎣 <span>Fishing Planet Info</span></div>
+    <nav class="topnav">
+      <a href="index.html">🐟 Peixes</a>
+      <a href="mapa.html" class="active">🗺️ Mapa &amp; Licenças</a>
+    </nav>
+    <div class="appbar-actions">
+      <span id="modePill" class="mode-pill" title="Origem dos dados"></span>
+    </div>
   </header>
 
-  <div id="modeBanner" class="mode-banner" hidden></div>
+  <p class="sub">Onde fica cada ponto de pesca, o preço da viagem, a diária e como funcionam as licenças. Clique num pin para o guia completo.</p>
 
   <div id="map"></div>
 

@@ -38,6 +38,34 @@ h1 { margin: 0 0 6px; font-size: 1.7rem; }
 .topnav a:hover { color: var(--text); border-color: var(--accent); }
 .topnav a.active { color: #07210f; background: var(--accent); border-color: var(--accent); }
 
+/* barra de topo (marca + nav + status + editar) */
+.appbar { display: flex; align-items: center; gap: 10px 14px; flex-wrap: wrap; text-align: left; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.appbar .topnav { margin: 0; }
+.brand { font-weight: 800; font-size: 1.15rem; white-space: nowrap; }
+.appbar-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.wrap > .sub { text-align: left; max-width: none; margin: 0 0 16px; }
+
+/* pill de status do banco */
+.mode-pill { font-size: 0.78rem; font-weight: 700; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--muted); white-space: nowrap; }
+.mode-pill.cloud { border-color: #1d5a3a; background: #112a1d; color: #8fe3b0; }
+.mode-pill.local { border-color: #5a4a1e; background: #2a2412; color: #f0d488; }
+.mode-pill.error { border-color: #6a2b2b; background: #2a1414; color: #f0a0a0; }
+
+/* barra de busca/filtros fixa no topo ao rolar */
+.searchbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; position: sticky; top: 0; z-index: 5; background: var(--bg); padding: 10px 0; border-bottom: 1px solid var(--line); }
+.searchbar input[type="search"] { flex: 1 1 260px; }
+.searchbar .viewtoggle { margin: 0; }
+
+/* painel e controles de edição — só aparecem no modo Editar */
+.edit-panel { margin-bottom: 16px; }
+.edit-hint { font-size: 0.84rem; color: #f0d488; background: #2a2412; border: 1px solid #5a4a1e; border-radius: 10px; padding: 8px 12px; margin-bottom: 10px; }
+.btn.ghost.active { color: #07210f; background: var(--accent); border-color: var(--accent); }
+.read-mode .edit-panel,
+.read-mode .add-fish,
+.read-mode .acoes,
+.read-mode [data-action="delLocal"],
+.read-mode .toolbar { display: none; }
+
 /* página do mapa */
 #map { height: 440px; border-radius: 14px; border: 1px solid var(--line); margin-bottom: 18px; z-index: 0; }
 .leaflet-popup-content { margin: 10px 12px; }

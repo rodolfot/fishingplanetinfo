@@ -52,15 +52,15 @@ async function main() {
 }
 
 function setBanner(mode, msg) {
-  const b = document.getElementById("modeBanner");
-  if (!b) return;
-  b.hidden = false;
-  b.className = "mode-banner " + (mode === "error" ? "error" : mode);
-  b.textContent = mode === "cloud"
-    ? "☁️ Modo colaborativo (Supabase)."
+  const p = document.getElementById("modePill");
+  if (!p) return;
+  p.className = "mode-pill " + (mode === "error" ? "error" : mode);
+  p.textContent = mode === "cloud" ? "☁️ Colaborativo" : mode === "error" ? "⚠️ Sem conexão" : "🗄️ Local";
+  p.title = mode === "cloud"
+    ? "Conectado ao Supabase — dados compartilhados."
     : mode === "error"
-      ? "⚠️ Supabase inacessível: " + msg + " — adicione ?local na URL para a demo offline."
-      : "🗄️ Modo local (demo). Viagem/diária/licenças são valores aproximados da comunidade.";
+      ? "Supabase inacessível: " + msg + " — adicione ?local na URL para a demo offline."
+      : "Modo local (demo). Viagem/diária/licenças são valores aproximados da comunidade.";
 }
 
 function initMap(locais) {

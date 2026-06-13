@@ -55,24 +55,21 @@ function scrollToHash() {
 }
 
 function setMode(mode, message) {
-  const banner = $("#modeBanner");
+  const pill = $("#modePill");
   const foot = $("#footMode");
   const toolbar = $(".toolbar");
-  banner.hidden = false;
-  banner.className = "mode-banner " + (mode === "error" ? "error" : mode);
-  if (mode === "cloud") {
-    banner.textContent = "☁️ Modo colaborativo — conectado ao Supabase. Suas edições são compartilhadas com todos.";
-    foot.textContent = "Modo colaborativo (Supabase)";
-    toolbar.hidden = true; // "restaurar exemplo" não faz sentido no banco compartilhado
-  } else if (mode === "error") {
-    banner.textContent = "⚠️ Supabase configurado mas inacessível: " + message;
-    foot.textContent = "Erro de conexão";
-    toolbar.hidden = true;
-  } else {
-    banner.textContent = "🗄️ Modo local — os dados ficam só neste navegador. Para colaborar (todos veem o mesmo), configure o Supabase em config.js.";
-    foot.textContent = "Modo local (localStorage)";
-    toolbar.hidden = false;
+  if (pill) {
+    pill.className = "mode-pill " + (mode === "error" ? "error" : mode);
+    pill.textContent = mode === "cloud" ? "☁️ Colaborativo" : mode === "error" ? "⚠️ Sem conexão" : "🗄️ Local";
+    pill.title = mode === "cloud"
+      ? "Conectado ao Supabase — suas edições são compartilhadas com todos."
+      : mode === "error"
+        ? "Supabase configurado mas inacessível: " + message
+        : "Dados só neste navegador. Configure o Supabase em config.js para colaborar.";
   }
+  if (foot) foot.textContent = mode === "cloud" ? "Modo colaborativo (Supabase)" : mode === "error" ? "Erro de conexão" : "Modo local (localStorage)";
+  // "restaurar exemplo" só no modo local (não faz sentido no banco compartilhado)
+  if (toolbar) toolbar.hidden = mode !== "local";
 }
 
 // ---- handlers estáticos ------------------------------------------------------
@@ -88,6 +85,13 @@ function wireHandlers() {
     await guard(() => store.addLocal({ nome, regiao, nivel, guia }));
     for (const id of ["#localName", "#localRegion", "#localNivel", "#localGuia"]) $(id).value = "";
     render();
+  });
+
+  // alterna modo leitura ↔ edição (esconde/mostra controles via classe no body)
+  $("#editToggle").addEventListener("click", (e) => {
+    const reading = document.body.classList.toggle("read-mode");
+    e.currentTarget.textContent = reading ? "✏️ Editar" : "✓ Pronto";
+    e.currentTarget.classList.toggle("active", !reading);
   });
 
   $("#search").addEventListener("input", render);
@@ -221,7 +225,7 @@ const COLUMNS = [
   { key: "isca",      label: "Isca" },
   { key: "tipo_vara", label: "Vara" },
   { key: "horario",   label: "Horário" },
-  { key: null,        label: "" },
+  { key: null,        label: "",         cls: "acoes" },
 ];
 
 let sortState = { key: "valor_kg", dir: "desc" };
