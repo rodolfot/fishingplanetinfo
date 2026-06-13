@@ -37,6 +37,7 @@ create table if not exists public.peixes (
   horario_fim     text,           -- "HH:MM"
   profundidade    text,
   obs             text,
+  aprox           boolean default false,  -- valor_kg/xp_kg são estimativa da comunidade
   criado_em       timestamptz not null default now()
 );
 
@@ -68,6 +69,7 @@ alter table public.peixes add column if not exists horario_inicio  text;
 alter table public.peixes add column if not exists horario_fim     text;
 alter table public.peixes add column if not exists profundidade    text;
 alter table public.peixes add column if not exists obs             text;
+alter table public.peixes add column if not exists aprox           boolean default false;
 alter table public.peixes add column if not exists criado_em       timestamptz not null default now();
 
 create index if not exists peixes_local_id_idx on public.peixes (local_id);

@@ -7,7 +7,8 @@ import { createStore } from "./store.js";
 
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const cr = (n) => (n == null || n === "" ? "—" : Number(n).toLocaleString("pt-BR") + " cr");
-const money = (n) => (n == null || n === "" ? null : "US$ " + Number(n).toLocaleString("pt-BR") + "/kg");
+const money = (n) => (n == null || n === "" ? null : Number(n).toLocaleString("pt-BR") + " cr/kg");
+const aprx = (f) => (f.aprox ? "~" : ""); // estimativa da comunidade
 const fmtTime = (a, b) => (a && b ? `${a}–${b}` : a || b || "");
 const FLAG = { "EUA": "🇺🇸", "República Tcheca": "🇨🇿", "Rússia": "🇷🇺" };
 const flag = (p) => FLAG[p] || "🌍";
@@ -90,7 +91,7 @@ function popupHtml(l) {
     return `<div class="pop-fish">
       <div class="pop-fish-top">
         <b>${esc(f.nome)}</b> ${periodoBadge(f.periodo)}
-        ${val ? `<span class="pop-val">${val}</span>` : ""}
+        ${val ? `<span class="pop-val">${aprx(f)}${val}</span>` : ""}
       </div>
       ${meta ? `<div class="pop-fish-meta">${meta}</div>` : ""}
     </div>`;
@@ -129,7 +130,7 @@ function renderCountries(locais) {
         <tbody>${ls.map((l) => {
           const best = topFish(l.peixes, 1)[0];
           const bestTxt = best
-            ? `${esc(best.nome)}${best.valor_kg != null ? ` <span class="muted small">${money(best.valor_kg)}</span>` : ""}${best.isca ? `<div class="muted small">🪱 ${esc(best.isca)}</div>` : ""}`
+            ? `${esc(best.nome)}${best.valor_kg != null ? ` <span class="muted small">${aprx(best)}${money(best.valor_kg)}</span>` : ""}${best.isca ? `<div class="muted small">🪱 ${esc(best.isca)}</div>` : ""}`
             : "—";
           return `
           <tr>

@@ -14,9 +14,11 @@ const esc = (s) =>
   String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 const fmtMoney = (n) =>
-  n == null || n === "" ? "—" : "US$ " + Number(n).toLocaleString("pt-BR");
+  n == null || n === "" ? "—" : Number(n).toLocaleString("pt-BR") + " cr";
 const fmtXp = (n) => (n == null || n === "" ? "—" : Number(n).toLocaleString("pt-BR"));
 const fmtTime = (a, b) => (a && b ? `${a}–${b}` : a || b || "—");
+// "~" antes do número quando o valor/xp é estimativa da comunidade (aprox).
+const aprx = (f, n) => (f.aprox && n != null && n !== "" ? "~" : "");
 
 const rarityClass = (r) => {
   const k = (r || "").toLowerCase().trim();
@@ -213,7 +215,7 @@ const collator = new Intl.Collator("pt-BR", { numeric: true, sensitivity: "base"
 const COLUMNS = [
   { key: null,        label: "#",        cls: "rank" },
   { key: "name",      label: "Peixe" },
-  { key: "valor_kg",  label: "US$/kg",   cls: "num" },
+  { key: "valor_kg",  label: "cr/kg",    cls: "num" },
   { key: "xp_kg",     label: "XP/kg",    cls: "num" },
   { key: "periodo",   label: "Período" },
   { key: "isca",      label: "Isca" },
@@ -294,13 +296,13 @@ function aggregateSpecies(locais) {
       const key = (f.nome || "").toLowerCase().trim();
       if (!key) continue;
       let e = map.get(key);
-      if (!e) { e = { nome: f.nome, sci: "", locais: new Set(), periodos: new Set(), iscas: new Set(), raridades: new Set(), best: null }; map.set(key, e); }
+      if (!e) { e = { nome: f.nome, sci: "", locais: new Set(), periodos: new Set(), iscas: new Set(), raridades: new Set(), best: null, bestAprox: false }; map.set(key, e); }
       if (!e.sci && f.nome_cientifico) e.sci = f.nome_cientifico;
       e.locais.add(loc.nome);
       if (f.periodo) e.periodos.add(f.periodo);
       if (f.isca) e.iscas.add(f.isca);
       if (f.raridade) e.raridades.add(f.raridade);
-      if (f.valor_kg != null && (e.best == null || Number(f.valor_kg) > e.best)) e.best = Number(f.valor_kg);
+      if (f.valor_kg != null && (e.best == null || Number(f.valor_kg) > e.best)) { e.best = Number(f.valor_kg); e.bestAprox = !!f.aprox; }
     }
   return [...map.values()];
 }
@@ -316,7 +318,7 @@ function speciesCard(s) {
       ${s.sci ? `<span class="species-sci">${esc(s.sci)}</span>` : ""}
     </div>
     <div class="species-meta">Aparece em <b>${locs.length}</b> ponto(s) · melhor
-      <span class="price">${fmtMoney(s.best)}</span>/kg · ${periodos}</div>
+      <span class="price">${s.bestAprox && s.best != null ? "~" : ""}${fmtMoney(s.best)}</span>/kg · ${periodos}</div>
     <div class="species-locais">📍 ${locs.map(esc).join(", ")}</div>
     ${iscas ? `<div class="species-iscas">🪱 ${iscas}</div>` : ""}
   </div>`;
@@ -407,7 +409,7 @@ function renderBest(locais) {
   $("#best").innerHTML = best
     ? `<div class="label">💰 Compensa mais</div>
        <div class="name">${esc(best.f.nome)}${rarityTag(best.f.raridade)}</div>
-       <div>Vale <span class="price">${fmtMoney(best.f.valor_kg)}</span> por kg
+       <div>Vale <span class="price">${aprx(best.f, best.f.valor_kg)}${fmtMoney(best.f.valor_kg)}</span> por kg
          <span class="where">— ${esc(best.loc.nome)}</span></div>`
     : `<div class="label">💰 Compensa mais</div>
        <div class="where">Adicione peixes com valor (US$/kg) para ver o ranking.</div>`;
@@ -430,8 +432,8 @@ function renderSpot(loc, fishes) {
           ${f.profundidade ? `<div class="fish-obs">📍 ${esc(f.profundidade)}</div>` : ""}
           ${f.obs ? `<div class="fish-obs">${esc(f.obs)}</div>` : ""}
         </td>
-        <td class="num price-cell">${fmtMoney(f.valor_kg)}</td>
-        <td class="num xp-cell">${fmtXp(f.xp_kg)}</td>
+        <td class="num price-cell" ${f.aprox ? 'title="valor aproximado da comunidade"' : ""}>${aprx(f, f.valor_kg)}${fmtMoney(f.valor_kg)}</td>
+        <td class="num xp-cell">${aprx(f, f.xp_kg)}${fmtXp(f.xp_kg)}</td>
         <td class="per-cell">${periodoBadge(f.periodo)}</td>
         <td class="cell-isca">${esc(f.isca) || "—"}</td>
         <td class="cell-vara">${esc(f.tipo_vara) || "—"}</td>

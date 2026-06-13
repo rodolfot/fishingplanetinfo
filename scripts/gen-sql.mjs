@@ -15,8 +15,9 @@ const q = (s) => (s == null || s === "" ? "null" : `'${String(s).replace(/'/g, "
 const numeric = (n) => (n == null ? "null::numeric" : String(n));
 const inteiro = (n) => (n == null ? "null::int" : String(n));
 const numlit = (n) => (n == null ? "null" : String(n));
+const bool = (b) => (b ? "true" : "false");
 
-const COLS = "nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs";
+const COLS = "nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs,aprox";
 
 function locaisInsert(locais) {
   return (
@@ -35,7 +36,7 @@ function peixesBlock(loc) {
     .map((f) =>
       `  (${q(f.nome)},${q(f.nome_cientifico)},${q(f.raridade)},${q(f.periodo)},` +
       `${numeric(f.valor_kg)},${inteiro(f.xp_kg)},${q(f.isca)},${q(f.tipo_vara)},` +
-      `${q(f.horario_inicio)},${q(f.horario_fim)},${q(f.profundidade)},${q(f.obs)})`
+      `${q(f.horario_inicio)},${q(f.horario_fim)},${q(f.profundidade)},${q(f.obs)},${bool(f.aprox)})`
     )
     .join(",\n");
   return (
