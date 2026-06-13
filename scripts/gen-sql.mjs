@@ -21,10 +21,11 @@ const COLS = "nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_var
 
 function locaisInsert(locais) {
   return (
-    "insert into public.locais_pesca (nome, regiao, nivel, guia, pais, lat, lng, preco_viagem, diaria, estimado) values\n" +
+    "insert into public.locais_pesca (nome, regiao, nivel, guia, pais, lat, lng, preco_viagem, diaria, lic_3dias, lic_7dias, lic_ilimitada, estimado) values\n" +
     locais.map((l) =>
       `  (${q(l.nome)}, ${q(l.regiao)}, ${q(l.nivel)}, ${q(l.guia)}, ${q(l.pais)}, ` +
-      `${numlit(l.lat)}, ${numlit(l.lng)}, ${numlit(l.preco_viagem)}, ${numlit(l.diaria)}, ${bool(l.estimado)})`
+      `${numlit(l.lat)}, ${numlit(l.lng)}, ${numlit(l.preco_viagem)}, ${numlit(l.diaria)}, ` +
+      `${numlit(l.lic_3dias)}, ${numlit(l.lic_7dias)}, ${numlit(l.lic_ilimitada)}, ${bool(l.estimado)})`
     ).join(",\n") +
     ";"
   );

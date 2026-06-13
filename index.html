@@ -45,13 +45,24 @@
 
   <!-- Painel de edição (visível só no modo Editar) -->
   <div id="editPanel" class="edit-panel">
-    <div class="edit-hint">✏️ <b>Modo edição.</b> Adicione um ponto abaixo, ou use os botões ✎/✕ e os formulários em cada ponto. As mudanças são compartilhadas (modo colaborativo).</div>
-    <form id="addLocalForm" class="panel">
-      <input type="text" id="localName" placeholder="Nome do ponto (ex: Rio Mudwater)" required>
-      <input type="text" id="localRegion" placeholder="Região / país (opcional)">
-      <input type="text" id="localNivel" placeholder="Nível/licença (opcional)">
-      <input type="text" id="localGuia" placeholder="Dica/guia do local (opcional)">
-      <button class="btn" type="submit">+ Adicionar ponto</button>
+    <div class="edit-hint">✏️ <b>Modo edição.</b> Adicione um ponto abaixo, ou clique em <b>✎ Editar ponto</b> num ponto existente para alterar nível, viagem, diária e licenças. As mudanças são compartilhadas (modo colaborativo).</div>
+    <form id="addLocalForm" class="panel pointform">
+      <div class="pf-title" id="pointFormTitle">➕ Novo ponto de pesca</div>
+      <div class="pf-grid">
+        <label class="pf-wide">Nome *<input type="text" id="localName" placeholder="Ex: Rio Mudwater" required></label>
+        <label class="pf-wide">Região / país<input type="text" id="localRegion" placeholder="Ex: Missouri, EUA"></label>
+        <label>Nível / licença<input type="text" id="localNivel" placeholder="Ex: Nível 1+"></label>
+        <label>🧳 Viagem (cr)<input type="number" id="localViagem" min="0" step="1" placeholder="—"></label>
+        <label>📅 1 dia (cr)<input type="number" id="localDiaria" min="0" step="1" placeholder="—"></label>
+        <label>3 dias (cr)<input type="number" id="localLic3" min="0" step="1" placeholder="—"></label>
+        <label>7 dias (cr)<input type="number" id="localLic7" min="0" step="1" placeholder="—"></label>
+        <label>♾️ Ilimitada (baitcoin)<input type="number" id="localLicIlim" min="0" step="1" placeholder="—"></label>
+        <label class="pf-full">Dica / guia<input type="text" id="localGuia" placeholder="Dica do local (opcional)"></label>
+      </div>
+      <div class="pf-actions">
+        <button class="btn" type="submit" id="localSubmit">+ Adicionar ponto</button>
+        <button class="btn ghost small" type="button" id="localCancel" hidden>Cancelar</button>
+      </div>
     </form>
   </div>
 

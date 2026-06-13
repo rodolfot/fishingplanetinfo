@@ -20,6 +20,18 @@ const fmtTime = (a, b) => (a && b ? `${a}–${b}` : a || b || "—");
 // "~" antes do número quando o valor/xp é estimativa da comunidade (aprox).
 const aprx = (f, n) => (f.aprox && n != null && n !== "" ? "~" : "");
 
+// linha de licenças do ponto (mostra só o que estiver preenchido).
+function licLine(loc) {
+  const cr = (n) => Number(n).toLocaleString("pt-BR") + " cr";
+  const p = [];
+  if (loc.preco_viagem != null) p.push(`🧳 Viagem ${cr(loc.preco_viagem)}`);
+  if (loc.diaria != null) p.push(`📅 1 dia ${cr(loc.diaria)}`);
+  if (loc.lic_3dias != null) p.push(`3 dias ${cr(loc.lic_3dias)}`);
+  if (loc.lic_7dias != null) p.push(`7 dias ${cr(loc.lic_7dias)}`);
+  if (loc.lic_ilimitada != null) p.push(`♾️ ${Number(loc.lic_ilimitada).toLocaleString("pt-BR")} baitcoin`);
+  return p.length ? `<div class="spot-lic">🎫 ${p.join(" · ")}</div>` : "";
+}
+
 const rarityClass = (r) => {
   const k = (r || "").toLowerCase().trim();
   if (k.startsWith("trof")) return "trofeu";
@@ -74,18 +86,19 @@ function setMode(mode, message) {
 
 // ---- handlers estáticos ------------------------------------------------------
 function wireHandlers() {
-  $("#addLocalForm").addEventListener("submit", async (e) => {
+  const localForm = $("#addLocalForm");
+  localForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!store) return;
-    const nome = $("#localName").value.trim();
-    const regiao = $("#localRegion").value.trim();
-    const nivel = $("#localNivel").value.trim();
-    const guia = $("#localGuia").value.trim();
-    if (!nome) return;
-    await guard(() => store.addLocal({ nome, regiao, nivel, guia }));
-    for (const id of ["#localName", "#localRegion", "#localNivel", "#localGuia"]) $(id).value = "";
+    const f = readLocalForm();
+    if (!f.nome) return;
+    const editId = localForm.dataset.editId;
+    if (editId) await guard(() => store.updateLocal(editId, f));
+    else await guard(() => store.addLocal(f));
+    resetLocalForm();
     render();
   });
+  $("#localCancel").addEventListener("click", () => resetLocalForm());
 
   // alterna modo leitura ↔ edição (esconde/mostra controles via classe no body)
   $("#editToggle").addEventListener("click", (e) => {
@@ -138,7 +151,10 @@ function wireHandlers() {
     const btn = e.target.closest("[data-action]");
     if (!btn || !store) return;
     const { action, local, id } = btn.dataset;
-    if (action === "delLocal") {
+    if (action === "editLocal") {
+      const loc = store.getLocais().find((l) => String(l.id) === String(local));
+      if (loc) startEditLocal(loc);
+    } else if (action === "delLocal") {
       if (!confirm("Remover este ponto de pesca e todos os peixes dele?")) return;
       await guard(() => store.delLocal(local));
       render();
@@ -165,6 +181,49 @@ function wireHandlers() {
     else await guard(() => store.addPeixe(form.dataset.local, fish));
     render();
   });
+}
+
+// ---- formulário de ponto (adicionar / editar) -------------------------------
+const intOrNull = (v) => { const n = parseInt(v, 10); return Number.isFinite(n) ? n : null; };
+
+function readLocalForm() {
+  const g = (id) => $(id).value.trim();
+  return {
+    nome: g("#localName"),
+    regiao: g("#localRegion") || null,
+    nivel: g("#localNivel") || null,
+    guia: g("#localGuia") || null,
+    preco_viagem: intOrNull($("#localViagem").value),
+    diaria: intOrNull($("#localDiaria").value),
+    lic_3dias: intOrNull($("#localLic3").value),
+    lic_7dias: intOrNull($("#localLic7").value),
+    lic_ilimitada: intOrNull($("#localLicIlim").value),
+  };
+}
+const LOCAL_FIELDS = ["#localName", "#localRegion", "#localNivel", "#localGuia", "#localViagem", "#localDiaria", "#localLic3", "#localLic7", "#localLicIlim"];
+function resetLocalForm() {
+  const form = $("#addLocalForm");
+  delete form.dataset.editId;
+  for (const id of LOCAL_FIELDS) $(id).value = "";
+  $("#localSubmit").textContent = "+ Adicionar ponto";
+  $("#pointFormTitle").textContent = "➕ Novo ponto de pesca";
+  $("#localCancel").hidden = true;
+}
+function startEditLocal(loc) {
+  const form = $("#addLocalForm");
+  form.dataset.editId = String(loc.id);
+  const set = (id, v) => { $(id).value = v ?? ""; };
+  set("#localName", loc.nome); set("#localRegion", loc.regiao); set("#localNivel", loc.nivel); set("#localGuia", loc.guia);
+  set("#localViagem", loc.preco_viagem); set("#localDiaria", loc.diaria);
+  set("#localLic3", loc.lic_3dias); set("#localLic7", loc.lic_7dias); set("#localLicIlim", loc.lic_ilimitada);
+  $("#localSubmit").textContent = "💾 Salvar ponto";
+  $("#pointFormTitle").textContent = "✎ Editando: " + loc.nome;
+  $("#localCancel").hidden = false;
+  // garante o modo edição visível e rola até o formulário
+  document.body.classList.remove("read-mode");
+  $("#editToggle").textContent = "✓ Pronto"; $("#editToggle").classList.add("active");
+  $("#editPanel").scrollIntoView({ behavior: "smooth", block: "start" });
+  $("#localName").focus();
 }
 
 // pré-preenche o formulário do ponto com os dados do peixe para edição in-place
@@ -427,6 +486,7 @@ function renderSpot(loc, fishes) {
   const nivel = loc.nivel ? ` · <span class="nivel">${esc(loc.nivel)}</span>` : "";
   const estimado = loc.estimado ? `<div class="spot-estimado" title="Lista de espécies estimada pela região, não confirmada no jogo">⚠️ Dados estimados — espécies típicas da região, ainda não confirmadas no jogo. Corrija no modo colaborativo.</div>` : "";
   const guia = loc.guia ? `<div class="spot-guia">📖 ${esc(loc.guia)}</div>` : "";
+  const lic = licLine(loc);
   const rows = fishes.length
     ? fishes.map((f, i) => `
       <tr>
@@ -456,9 +516,13 @@ function renderSpot(loc, fishes) {
         <h2>🌊 ${esc(loc.nome)}</h2>
         <span class="meta">${loc.peixes.length} peixe(s)${region}${nivel}</span>
       </div>
-      <button class="btn ghost small" data-action="delLocal" data-local="${esc(loc.id)}">Remover ponto</button>
+      <div class="spot-actions acoes">
+        <button class="btn ghost small" data-action="editLocal" data-local="${esc(loc.id)}">✎ Editar ponto</button>
+        <button class="btn ghost small" data-action="delLocal" data-local="${esc(loc.id)}">✕ Remover</button>
+      </div>
     </div>
     ${estimado}
+    ${lic}
     ${guia}
     <div class="table-scroll">
       <table>

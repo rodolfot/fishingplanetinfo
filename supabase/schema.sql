@@ -18,7 +18,10 @@ create table if not exists public.locais_pesca (
   lat          double precision, -- latitude (mapa-múndi)
   lng          double precision, -- longitude
   preco_viagem integer,          -- custo da viagem (créditos)
-  diaria       integer,          -- licença diária (créditos)
+  diaria       integer,          -- licença 1 dia (créditos)
+  lic_3dias    integer,          -- licença 3 dias (créditos)
+  lic_7dias    integer,          -- licença 7 dias (créditos)
+  lic_ilimitada integer,         -- licença ilimitada (baitcoin / premium)
   estimado     boolean default false, -- água/peixes são estimativa da região (não confirmados)
   criado_em    timestamptz not null default now()
 );
@@ -57,6 +60,9 @@ alter table public.locais_pesca add column if not exists lat    double precision
 alter table public.locais_pesca add column if not exists lng    double precision;
 alter table public.locais_pesca add column if not exists preco_viagem integer;
 alter table public.locais_pesca add column if not exists diaria integer;
+alter table public.locais_pesca add column if not exists lic_3dias integer;
+alter table public.locais_pesca add column if not exists lic_7dias integer;
+alter table public.locais_pesca add column if not exists lic_ilimitada integer;
 alter table public.locais_pesca add column if not exists estimado boolean default false;
 alter table public.locais_pesca add column if not exists criado_em timestamptz not null default now();
 

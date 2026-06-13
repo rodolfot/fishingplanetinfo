@@ -33,8 +33,19 @@ export class LocalStore {
   async init() { return this.locais; }
   getLocais() { return this.locais; }
 
-  async addLocal({ nome, regiao, nivel, guia }) {
-    this.locais.push({ id: uid(), nome, regiao: regiao || null, nivel: nivel || null, guia: guia || null, criado_em: new Date().toISOString(), peixes: [] });
+  async addLocal(f) {
+    this.locais.push({
+      id: uid(), nome: f.nome, regiao: f.regiao || null, nivel: f.nivel || null, guia: f.guia || null,
+      preco_viagem: f.preco_viagem ?? null, diaria: f.diaria ?? null,
+      lic_3dias: f.lic_3dias ?? null, lic_7dias: f.lic_7dias ?? null, lic_ilimitada: f.lic_ilimitada ?? null,
+      criado_em: new Date().toISOString(), peixes: [],
+    });
+    this.persist();
+  }
+  async updateLocal(id, f) {
+    const loc = this.locais.find((l) => String(l.id) === String(id));
+    if (!loc) return;
+    Object.assign(loc, f);
     this.persist();
   }
   async delLocal(id) {
@@ -83,11 +94,22 @@ export class SupabaseStore {
   }
   getLocais() { return this.locais; }
 
-  async addLocal({ nome, regiao, nivel, guia }) {
+  async addLocal(f) {
     const { data, error } = await this.client
-      .from("locais_pesca").insert({ nome, regiao: regiao || null, nivel: nivel || null, guia: guia || null }).select().single();
+      .from("locais_pesca").insert({
+        nome: f.nome, regiao: f.regiao || null, nivel: f.nivel || null, guia: f.guia || null,
+        preco_viagem: f.preco_viagem ?? null, diaria: f.diaria ?? null,
+        lic_3dias: f.lic_3dias ?? null, lic_7dias: f.lic_7dias ?? null, lic_ilimitada: f.lic_ilimitada ?? null,
+      }).select().single();
     if (error) throw new Error(error.message);
     this.locais.push({ ...data, peixes: [] });
+  }
+  async updateLocal(id, f) {
+    const { data, error } = await this.client
+      .from("locais_pesca").update(f).eq("id", id).select().single();
+    if (error) throw new Error(error.message);
+    const loc = this.locais.find((l) => String(l.id) === String(id));
+    if (loc) Object.assign(loc, data);
   }
   async delLocal(id) {
     const { error } = await this.client.from("locais_pesca").delete().eq("id", id);

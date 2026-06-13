@@ -210,6 +210,20 @@ tbody tr:hover { background: #1a2d47; }
 .panel { background: var(--card); border: 1px dashed var(--line); border-radius: 14px; padding: 14px 16px; margin-bottom: 16px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .panel input { flex: 1 1 200px; }
 
+/* formulário de ponto (adicionar/editar) — grid com rótulos */
+.pointform { display: block; }
+.pf-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 10px; }
+.pf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px 12px; align-items: start; }
+.pf-grid label { display: flex; flex-direction: column; gap: 4px; color: var(--muted); font-size: 0.74rem; }
+.pf-grid input { flex: none; width: 100%; height: 40px; }
+.pf-grid .pf-wide { grid-column: span 2; }
+.pf-grid .pf-full { grid-column: 1 / -1; }
+.pf-actions { display: flex; gap: 8px; margin-top: 12px; }
+
+/* linha de licenças no cabeçalho do ponto */
+.spot-lic { color: var(--gold); font-size: 0.84rem; padding: 8px 16px; background: #122941; border-top: 1px solid var(--line); }
+.spot-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
 .toolbar { display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 18px; }
 footer { text-align: center; color: var(--muted); font-size: 0.8rem; margin-top: 22px; display: grid; gap: 4px; }
 .foot-mode { font-weight: 600; }

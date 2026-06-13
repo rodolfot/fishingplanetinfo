@@ -98,8 +98,13 @@ function popupHtml(l) {
   }).join("");
 
   const guia = l.guia ? `<div class="pop-guia">📖 ${esc(l.guia)}</div>` : "";
-  const lic = (l.preco_viagem != null || l.diaria != null)
-    ? `<div class="pop-lic">🧳 Viagem <b>${cr(l.preco_viagem)}</b> · 📅 Diária <b>${cr(l.diaria)}</b></div>` : "";
+  const licParts = [];
+  if (l.preco_viagem != null) licParts.push(`🧳 Viagem <b>${cr(l.preco_viagem)}</b>`);
+  if (l.diaria != null) licParts.push(`📅 1 dia <b>${cr(l.diaria)}</b>`);
+  if (l.lic_3dias != null) licParts.push(`3 dias <b>${cr(l.lic_3dias)}</b>`);
+  if (l.lic_7dias != null) licParts.push(`7 dias <b>${cr(l.lic_7dias)}</b>`);
+  if (l.lic_ilimitada != null) licParts.push(`♾️ <b>${Number(l.lic_ilimitada).toLocaleString("pt-BR")} baitcoin</b>`);
+  const lic = licParts.length ? `<div class="pop-lic">${licParts.join(" · ")}</div>` : "";
 
   return `<div class="map-pop">
     <div class="pop-head">
