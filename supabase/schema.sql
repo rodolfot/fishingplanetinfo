@@ -9,12 +9,17 @@
 -- =============================================================================
 
 create table if not exists public.locais_pesca (
-  id         bigint generated always as identity primary key,
-  nome       text not null,
-  regiao     text,
-  nivel      text,               -- nível/licença recomendada (ex: "Nível 1+")
-  guia       text,               -- dicas/guia do local
-  criado_em  timestamptz not null default now()
+  id           bigint generated always as identity primary key,
+  nome         text not null,
+  regiao       text,
+  nivel        text,             -- nível/licença recomendada (ex: "Nível 1+")
+  guia         text,             -- dicas/guia do local
+  pais         text,             -- país (agrupamento no mapa)
+  lat          double precision, -- latitude (mapa-múndi)
+  lng          double precision, -- longitude
+  preco_viagem integer,          -- custo da viagem (créditos)
+  diaria       integer,          -- licença diária (créditos)
+  criado_em    timestamptz not null default now()
 );
 
 create table if not exists public.peixes (
@@ -45,6 +50,11 @@ create table if not exists public.peixes (
 alter table public.locais_pesca add column if not exists regiao text;
 alter table public.locais_pesca add column if not exists nivel  text;
 alter table public.locais_pesca add column if not exists guia   text;
+alter table public.locais_pesca add column if not exists pais   text;
+alter table public.locais_pesca add column if not exists lat    double precision;
+alter table public.locais_pesca add column if not exists lng    double precision;
+alter table public.locais_pesca add column if not exists preco_viagem integer;
+alter table public.locais_pesca add column if not exists diaria integer;
 alter table public.locais_pesca add column if not exists criado_em timestamptz not null default now();
 
 alter table public.peixes add column if not exists nome_cientifico text;

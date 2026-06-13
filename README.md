@@ -24,6 +24,8 @@ ponto de pesca**.
 - **Barra de estatísticas** (pontos, peixes, espécies, troféus) e **índice** de
   pontos para navegação rápida.
 - **Destaque "compensa mais"** (maior US$/kg).
+- **Mapa-múndi** (`mapa.html`): pontos no mapa (Leaflet), **preço da viagem**,
+  **diária** e um guia de **como funcionam as licenças**.
 
 ## Cobertura atual dos dados de exemplo
 
@@ -95,10 +97,13 @@ variáveis no seu fluxo de deploy).
 ## 🗂️ Estrutura
 
 ```text
-index.html          estrutura da página
-styles.css          tema escuro
-app.js              lógica + camada de dados plugável (Supabase | localStorage)
-config.js           credenciais do Supabase (vazio = modo local)
+index.html          página de peixes (pontos / enciclopédia)
+mapa.html           mapa-múndi + viagem/diária/licenças
+styles.css          tema escuro (compartilhado)
+store.js            camada de dados plugável (Supabase | localStorage) — compartilhada
+app.js              lógica da página de peixes
+map.js              lógica da página do mapa (Leaflet)
+config.js           credenciais do Supabase (vazio/⁠?local = modo local)
 seed.js             dados de exemplo (FONTE ÚNICA — modo local)
 scripts/gen-sql.mjs gera os .sql a partir de seed.js
 supabase/schema.sql tabelas + RLS + migração idempotente
@@ -108,7 +113,8 @@ supabase/seed-extra.sql  só as águas novas (projeto reaproveitado) — GERADO
 
 ### Modelo de dados
 
-- **locais_pesca**: `id`, `nome`, `regiao`, `nivel`, `guia`, `criado_em`
+- **locais_pesca**: `id`, `nome`, `regiao`, `nivel`, `guia`, `pais`, `lat`, `lng`,
+  `preco_viagem`, `diaria`, `criado_em`
 - **peixes**: `id`, `local_id`, `nome`, `nome_cientifico`, `raridade`
   (`comum`/`jovem`/`troféu`), `periodo` (`diurno`/`noturno`/`ambos`), `valor_kg`,
   `xp_kg`, `isca`, `tipo_vara`, `horario_inicio`, `horario_fim`, `profundidade`,

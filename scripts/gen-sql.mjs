@@ -14,13 +14,17 @@ const JA_EXISTEM = new Set(["Rio Mudwater", "Pesqueiro Lesni Vila"]);
 const q = (s) => (s == null || s === "" ? "null" : `'${String(s).replace(/'/g, "''")}'`);
 const numeric = (n) => (n == null ? "null::numeric" : String(n));
 const inteiro = (n) => (n == null ? "null::int" : String(n));
+const numlit = (n) => (n == null ? "null" : String(n));
 
 const COLS = "nome,nome_cientifico,raridade,periodo,valor_kg,xp_kg,isca,tipo_vara,horario_inicio,horario_fim,profundidade,obs";
 
 function locaisInsert(locais) {
   return (
-    "insert into public.locais_pesca (nome, regiao, nivel, guia) values\n" +
-    locais.map((l) => `  (${q(l.nome)}, ${q(l.regiao)}, ${q(l.nivel)}, ${q(l.guia)})`).join(",\n") +
+    "insert into public.locais_pesca (nome, regiao, nivel, guia, pais, lat, lng, preco_viagem, diaria) values\n" +
+    locais.map((l) =>
+      `  (${q(l.nome)}, ${q(l.regiao)}, ${q(l.nivel)}, ${q(l.guia)}, ${q(l.pais)}, ` +
+      `${numlit(l.lat)}, ${numlit(l.lng)}, ${numlit(l.preco_viagem)}, ${numlit(l.diaria)})`
+    ).join(",\n") +
     ";"
   );
 }

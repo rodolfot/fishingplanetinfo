@@ -14,6 +14,7 @@
 export const SEED = [
   {
     nome: "Rio Mudwater",
+    pais: "EUA", lat: 38.5, lng: -92.5, preco_viagem: 2000, diaria: 500,
     regiao: "Missouri, EUA",
     nivel: "Nível 1+",
     guia: "Água inicial dos EUA, ótima para missões de bass e panfish. Boia leve com minhoca/maggot para os panfish; iscas artificiais com twitching rápido no amanhecer e entardecer para bass e pickerel.",
@@ -31,6 +32,7 @@ export const SEED = [
   },
   {
     nome: "Pesqueiro Lesni Vila",
+    pais: "República Tcheca", lat: 49.8, lng: 15.47, preco_viagem: null, diaria: null,
     regiao: "República Tcheca",
     nivel: "Nível 1+ (águas tchecas)",
     guia: "Pesqueiro tcheco para iniciantes. Bloodworm no anzol #10 pega quase todas as espécies. Boias deslizantes (slip bobber) ajudam muito em carpa, tenca e bagre.",
@@ -45,6 +47,7 @@ export const SEED = [
   },
   {
     nome: "Emerald Lake",
+    pais: "EUA", lat: 43.0, lng: -75.0, preco_viagem: null, diaria: 900,
     regiao: "Nova York, EUA",
     nivel: "Nível ~9–20",
     guia: "Lago de NY popular para subir de nível pegando Walleye (lance atrás das vitórias-régias, ~130–160 ft). Golden Shiner pega em qualquer lugar com spinners/spoons/shads. Pike perto das ervas com Shad 2\" em stop-and-go (Dock of Peace).",
@@ -59,6 +62,7 @@ export const SEED = [
   },
   {
     nome: "Lone Star Lake",
+    pais: "EUA", lat: 31.0, lng: -99.0, preco_viagem: null, diaria: null,
     regiao: "Texas, EUA",
     nivel: "Nível 1+",
     guia: "Lago do Texas com quase uma dúzia de espécies. Minhocas/stink bait pegam bem; Red Worm no anzol #6. Spotted Bass rende bom dinheiro; Channel Catfish é abundante (noite).",
@@ -75,6 +79,7 @@ export const SEED = [
   },
   {
     nome: "Quanchkin Lake",
+    pais: "EUA", lat: 30.5, lng: -91.5, preco_viagem: null, diaria: null,
     regiao: "Louisiana, EUA",
     nivel: "Nível ~10+",
     guia: "Pântano da Louisiana com predadores grandes. Alligator Gar exige leader de aço e anzol 6/0 com lagostim. Bagres (Channel/Flathead/Blue) à noite. Hotspots de Bowfin para troféu/único.",
@@ -90,6 +95,7 @@ export const SEED = [
   },
   {
     nome: "Rocky Lake",
+    pais: "EUA", lat: 39.0, lng: -105.5, preco_viagem: null, diaria: null,
     regiao: "Colorado, EUA",
     nivel: "Nível ~8–20",
     guia: "Lago de montanha no Colorado, famoso pelas trutas (Rainbow é a mais popular pra dinheiro). Trutas com fly/spinning e iscas pequenas/colheres; Brown no fundo com lagostim/minnow. Pike e Smallmouth com crankbaits perto de pedras e vegetação.",
@@ -106,6 +112,7 @@ export const SEED = [
   },
   {
     nome: "Neherrin River",
+    pais: "EUA", lat: 35.5, lng: -79.0, preco_viagem: null, diaria: null,
     regiao: "Carolina do Norte, EUA",
     nivel: "Nível 1+",
     guia: "Rio da Carolina do Norte com bass, panfish, carpa e shad. Iscas artificiais pra bass; minhocas/sanguessugas pros panfish; massa/milho pra carpa no fundo.",
@@ -122,6 +129,7 @@ export const SEED = [
   },
   {
     nome: "Everglades",
+    pais: "EUA", lat: 25.9, lng: -80.9, preco_viagem: null, diaria: null,
     regiao: "Flórida, EUA",
     nivel: "Nível ~15+ (alto XP)",
     guia: "Pântano da Flórida com espécies exóticas de alto XP. Peacock Bass exige tackle pesado na vegetação (spoons/jigs médios; iscas grandes e lentas perto da cobertura). Snook com isca-viva sob boia. Florida Gar rende muito XP no pico de alimentação.",
@@ -138,6 +146,7 @@ export const SEED = [
   },
   {
     nome: "Akhtuba River",
+    pais: "Rússia", lat: 48.7, lng: 44.8, preco_viagem: null, diaria: null,
     regiao: "Rússia",
     nivel: "Nível ~20+ (avançado)",
     guia: "Rio russo com predadores grandes e esturjão. Wels Catfish e Beluga no fundo com anzol 4/0–7/0 e isca cortada grande. Zander à noite com jigs; Asp na superfície de dia.",

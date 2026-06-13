@@ -5,15 +5,10 @@
 //    • Sem config            -> modo LOCAL (localStorage, só neste navegador)
 // =============================================================================
 
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from "./config.js";
-import { SEED } from "./seed.js";
-
-const STORE_KEY = "fpInfo.v1";
+import { createStore } from "./store.js";
 
 // ---- helpers -----------------------------------------------------------------
 const $ = (sel) => document.querySelector(sel);
-const uid = () =>
-  (crypto?.randomUUID?.() ?? "id" + Date.now() + Math.random().toString(36).slice(2, 8));
 
 const esc = (s) =>
   String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -33,128 +28,13 @@ const rarityClass = (r) => {
 const rarityTag = (r) =>
   r ? `<span class="tag ${rarityClass(r)}">${esc(r)}</span>` : "";
 
-// ---- camada de dados ---------------------------------------------------------
-class LocalStore {
-  mode = "local";
-  constructor() { this.locais = this.load(); }
-
-  load() {
-    try {
-      const raw = localStorage.getItem(STORE_KEY);
-      if (raw) return JSON.parse(raw);
-    } catch (e) { /* ignora */ }
-    return this.seedClone();
-  }
-  seedClone() {
-    return SEED.map((l) => ({
-      id: uid(), nome: l.nome, regiao: l.regiao ?? null, nivel: l.nivel ?? null, guia: l.guia ?? null,
-      criado_em: new Date().toISOString(),
-      peixes: l.peixes.map((p) => ({ id: uid(), local_id: null, ...p })),
-    }));
-  }
-  persist() { localStorage.setItem(STORE_KEY, JSON.stringify(this.locais)); }
-
-  async init() { return this.locais; }
-  getLocais() { return this.locais; }
-
-  async addLocal({ nome, regiao, nivel, guia }) {
-    this.locais.push({ id: uid(), nome, regiao: regiao || null, nivel: nivel || null, guia: guia || null, criado_em: new Date().toISOString(), peixes: [] });
-    this.persist();
-  }
-  async delLocal(id) {
-    this.locais = this.locais.filter((l) => String(l.id) !== String(id));
-    this.persist();
-  }
-  async addPeixe(localId, fish) {
-    const loc = this.locais.find((l) => String(l.id) === String(localId));
-    if (!loc) return;
-    loc.peixes.push({ id: uid(), local_id: localId, criado_em: new Date().toISOString(), ...fish });
-    this.persist();
-  }
-  async updatePeixe(localId, fishId, fish) {
-    const loc = this.locais.find((l) => String(l.id) === String(localId));
-    const i = loc?.peixes.findIndex((p) => String(p.id) === String(fishId)) ?? -1;
-    if (i < 0) return;
-    loc.peixes[i] = { ...loc.peixes[i], ...fish };
-    this.persist();
-  }
-  async delPeixe(localId, fishId) {
-    const loc = this.locais.find((l) => String(l.id) === String(localId));
-    if (loc) loc.peixes = loc.peixes.filter((p) => String(p.id) !== String(fishId));
-    this.persist();
-  }
-  async reset() {
-    this.locais = this.seedClone();
-    this.persist();
-  }
-}
-
-class SupabaseStore {
-  mode = "cloud";
-  constructor(client) { this.client = client; this.locais = []; }
-
-  static async create() {
-    const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
-    return new SupabaseStore(createClient(SUPABASE_URL, SUPABASE_ANON_KEY));
-  }
-
-  async init() {
-    const { data: locais, error: e1 } = await this.client.from("locais_pesca").select("*").order("id");
-    if (e1) throw new Error("Erro ao ler 'locais_pesca': " + e1.message + " (rodou o schema.sql?)");
-    const { data: peixes, error: e2 } = await this.client.from("peixes").select("*").order("id");
-    if (e2) throw new Error("Erro ao ler 'peixes': " + e2.message + " (rodou o schema.sql?)");
-    const byLocal = {};
-    for (const p of peixes ?? []) (byLocal[p.local_id] ??= []).push(p);
-    this.locais = (locais ?? []).map((l) => ({ ...l, peixes: byLocal[l.id] ?? [] }));
-    return this.locais;
-  }
-  getLocais() { return this.locais; }
-
-  async addLocal({ nome, regiao, nivel, guia }) {
-    const { data, error } = await this.client
-      .from("locais_pesca").insert({ nome, regiao: regiao || null, nivel: nivel || null, guia: guia || null }).select().single();
-    if (error) throw new Error(error.message);
-    this.locais.push({ ...data, peixes: [] });
-  }
-  async delLocal(id) {
-    const { error } = await this.client.from("locais_pesca").delete().eq("id", id);
-    if (error) throw new Error(error.message);
-    this.locais = this.locais.filter((l) => String(l.id) !== String(id));
-  }
-  async addPeixe(localId, fish) {
-    const { data, error } = await this.client
-      .from("peixes").insert({ ...fish, local_id: localId }).select().single();
-    if (error) throw new Error(error.message);
-    this.locais.find((l) => String(l.id) === String(localId))?.peixes.push(data);
-  }
-  async updatePeixe(localId, fishId, fish) {
-    const { data, error } = await this.client
-      .from("peixes").update(fish).eq("id", fishId).select().single();
-    if (error) throw new Error(error.message);
-    const loc = this.locais.find((l) => String(l.id) === String(localId));
-    const i = loc?.peixes.findIndex((p) => String(p.id) === String(fishId)) ?? -1;
-    if (i >= 0) loc.peixes[i] = data;
-  }
-  async delPeixe(localId, fishId) {
-    const { error } = await this.client.from("peixes").delete().eq("id", fishId);
-    if (error) throw new Error(error.message);
-    const loc = this.locais.find((l) => String(l.id) === String(localId));
-    if (loc) loc.peixes = loc.peixes.filter((p) => String(p.id) !== String(fishId));
-  }
-  async reset() { throw new Error("local-only"); }
-}
-
 // ---- estado / boot -----------------------------------------------------------
 let store = null;
 
 async function main() {
   wireHandlers();
-  // ?local na URL força o modo local (demo offline), mesmo com Supabase configurado.
-  const forceLocal = new URLSearchParams(window.location?.search || "").has("local");
-  const wantsCloud = !forceLocal && !!(SUPABASE_URL && SUPABASE_ANON_KEY);
   try {
-    store = wantsCloud ? await SupabaseStore.create() : new LocalStore();
-    await store.init();
+    store = await createStore();
     setMode(store.mode);
   } catch (e) {
     console.error(e);
@@ -162,6 +42,14 @@ async function main() {
     store = null;
   }
   render();
+  scrollToHash(); // pousa no ponto certo quando vier um link do mapa (#loc-...)
+}
+
+function scrollToHash() {
+  const hash = window.location?.hash || "";
+  if (!hash) return;
+  const el = document.getElementById(hash.slice(1));
+  if (el) { el.scrollIntoView({ behavior: "smooth", block: "start" }); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 900); }
 }
 
 function setMode(mode, message) {
@@ -582,5 +470,5 @@ function renderSpot(loc, fishes) {
 if (typeof document !== "undefined") main();
 
 // Exportado para testes (ignorado pelo navegador).
-export { esc, fmtMoney, fmtXp, fmtTime, rarityClass, rarityRank, LocalStore,
+export { esc, fmtMoney, fmtXp, fmtTime, rarityClass, rarityRank,
          cmpFactory, sortValue, timeToMin, periodoBadge, aggregateSpecies };

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🗺️ Mapa & Licenças — Fishing Planet Info</title>
+  <meta name="description" content="Mapa-múndi dos pontos de pesca do Fishing Planet com preço de viagem, diária e como funcionam as licenças.">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wrap">
+  <nav class="topnav">
+    <a href="index.html">🐟 Peixes</a>
+    <a href="mapa.html" class="active">🗺️ Mapa &amp; Licenças</a>
+  </nav>
+
+  <header>
+    <h1>🗺️ Mapa-múndi &amp; Licenças</h1>
+    <div class="sub">Onde fica cada ponto de pesca, o preço da viagem, a diária e como funcionam as licenças.</div>
+  </header>
+
+  <div id="modeBanner" class="mode-banner" hidden></div>
+
+  <div id="map"></div>
+
+  <h2 class="sec">📍 Pontos por país (viagem &amp; diária)</h2>
+  <div id="countries"><div class="empty">Carregando…</div></div>
+
+  <section class="licencas">
+    <h2 class="sec">🎫 Como funcionam as licenças</h2>
+    <ul>
+      <li>Você paga a <b>viagem</b> uma vez ao chegar na água. Se sair, paga de novo ao voltar.</li>
+      <li>Para pescar precisa de uma <b>licença</b> com duração: <b>diária</b>, 3 dias, 7 dias, 30 dias…</li>
+      <li>Quanto <b>maior a duração</b>, menor o custo por dia.</li>
+      <li>A licença <b>Ilimitada</b> é comprada com <b>Baitcoin</b> (moeda premium), não com créditos (cr).</li>
+    </ul>
+    <div class="table-scroll">
+      <table class="lic-table">
+        <thead><tr><th>Exemplo</th><th class="num">Viagem</th><th class="num">Diária</th><th class="num">Ilimitada</th></tr></thead>
+        <tbody>
+          <tr><td>Missouri — Rio Mudwater</td><td class="num">2.000 cr</td><td class="num">500 cr</td><td class="num">—</td></tr>
+          <tr><td>Nova York — Emerald Lake</td><td class="num">—</td><td class="num">900 cr</td><td class="num">—</td></tr>
+          <tr><td>Michigan (avançada)</td><td class="num">—</td><td class="num">8.000 cr/dia</td><td class="num">600 baitcoin</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted small">Valores de exemplo da comunidade; variam por água e versão do jogo. Corrija conforme o que aparece in-game.</p>
+  </section>
+
+  <footer>
+    <div>Créditos (cr) = moeda padrão do jogo. Coordenadas aproximadas no mundo real.</div>
+    <div class="foot-credits">Adicione <code>?local</code> à URL para a demo offline.</div>
+  </footer>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="module" src="map.js"></script>
+</body>
+</html>

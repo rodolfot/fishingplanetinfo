@@ -32,6 +32,28 @@ h1 { margin: 0 0 6px; font-size: 1.7rem; }
 .mode-banner.cloud { border-color: #1d5a3a; background: #112a1d; color: #8fe3b0; }
 .mode-banner.error { border-color: #6a2b2b; background: #2a1414; color: #f0a0a0; }
 
+/* navegação entre páginas */
+.topnav { display: flex; gap: 8px; margin-bottom: 14px; }
+.topnav a { color: var(--muted); text-decoration: none; padding: 8px 14px; border: 1px solid var(--line); border-radius: 10px; font-weight: 600; font-size: 0.9rem; background: var(--card); }
+.topnav a:hover { color: var(--text); border-color: var(--accent); }
+.topnav a.active { color: #07210f; background: var(--accent); border-color: var(--accent); }
+
+/* página do mapa */
+#map { height: 440px; border-radius: 14px; border: 1px solid var(--line); margin-bottom: 18px; z-index: 0; }
+.leaflet-popup-content { margin: 10px 12px; }
+.map-pop b { font-size: 0.98rem; }
+.map-pop a { color: var(--accent); font-weight: 700; }
+.sec { font-size: 1.15rem; margin: 18px 0 10px; }
+.country { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 6px 0 2px; margin-bottom: 14px; overflow: hidden; }
+.country h3 { margin: 8px 14px; font-size: 1rem; }
+.country table { min-width: 520px; }
+.licencas { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; margin-bottom: 16px; }
+.licencas ul { margin: 6px 0 12px; padding-left: 18px; line-height: 1.6; }
+.lic-table { min-width: 460px; }
+.muted { color: var(--muted); }
+.small { font-size: 0.78rem; }
+code { background: #0c1623; border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; }
+
 .highlight {
   background: linear-gradient(135deg, #1d3a2a, #16263d);
   border: 1px solid var(--accent);
