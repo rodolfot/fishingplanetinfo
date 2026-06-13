@@ -41,12 +41,24 @@ h1 { margin: 0 0 6px; font-size: 1.7rem; }
 /* página do mapa */
 #map { height: 440px; border-radius: 14px; border: 1px solid var(--line); margin-bottom: 18px; z-index: 0; }
 .leaflet-popup-content { margin: 10px 12px; }
+.map-pop { max-height: 340px; overflow-y: auto; }
 .map-pop b { font-size: 0.98rem; }
 .map-pop a { color: var(--accent); font-weight: 700; }
+.pop-head { margin-bottom: 6px; }
+.pop-lic { font-size: 0.82rem; margin-bottom: 6px; }
+.pop-guia { font-size: 0.78rem; color: var(--muted); margin: 6px 0; line-height: 1.45; max-height: 4.4em; overflow: hidden; }
+.pop-fish-title { font-weight: 700; font-size: 0.82rem; margin: 8px 0 4px; border-top: 1px solid var(--line); padding-top: 6px; }
+.pop-fish { padding: 4px 0; border-bottom: 1px dashed var(--line); }
+.pop-fish:last-of-type { border-bottom: 0; }
+.pop-fish-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.pop-fish-top b { font-size: 0.9rem; }
+.pop-val { margin-left: auto; color: var(--gold); font-weight: 700; font-size: 0.82rem; white-space: nowrap; }
+.pop-fish-meta { font-size: 0.76rem; color: var(--muted); line-height: 1.5; margin-top: 2px; }
+.pop-links { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
 .sec { font-size: 1.15rem; margin: 18px 0 10px; }
 .country { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 6px 0 2px; margin-bottom: 14px; overflow: hidden; }
 .country h3 { margin: 8px 14px; font-size: 1rem; }
-.country table { min-width: 520px; }
+.country table { min-width: 640px; }
 .licencas { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; margin-bottom: 16px; }
 .licencas ul { margin: 6px 0 12px; padding-left: 18px; line-height: 1.6; }
 .lic-table { min-width: 460px; }

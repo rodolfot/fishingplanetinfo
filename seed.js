@@ -13,7 +13,7 @@
 
 export const SEED = [
   {
-    nome: "Rio Mudwater",
+    nome: "Rio Mudwater", nome_en: "Mudwater River",
     pais: "EUA", lat: 38.5, lng: -92.5, preco_viagem: 2000, diaria: 500,
     regiao: "Missouri, EUA",
     nivel: "Nível 1+",
@@ -31,7 +31,7 @@ export const SEED = [
     ],
   },
   {
-    nome: "Pesqueiro Lesni Vila",
+    nome: "Pesqueiro Lesni Vila", nome_en: "Lesní Vila",
     pais: "República Tcheca", lat: 49.8, lng: 15.47, preco_viagem: null, diaria: null,
     regiao: "República Tcheca",
     nivel: "Nível 1+ (águas tchecas)",

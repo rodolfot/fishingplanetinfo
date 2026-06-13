@@ -5,7 +5,7 @@
 //         supabase/seed-extra.sql  (só as águas que NÃO existem no projeto
 //                                   reaproveitado do fishingplanetvalores)
 // =============================================================================
-import { writeFileSync } from "node:fs";
+import { writeFileSync, readFileSync } from "node:fs";
 import { SEED } from "../seed.js";
 
 // águas que já existem no projeto Supabase reaproveitado (não duplicar)
@@ -69,5 +69,20 @@ const extra = gerar(
 writeFileSync(new URL("../supabase/seed.sql", import.meta.url), full);
 writeFileSync(new URL("../supabase/seed-extra.sql", import.meta.url), extra);
 
+// Arquivo "tudo em um": schema (cria colunas) + WIPE + seed completo.
+// Cole UMA vez no SQL Editor do Supabase para zerar e recarregar as 9 águas.
+const schema = readFileSync(new URL("../supabase/schema.sql", import.meta.url), "utf8");
+const aplicarTudo =
+  schema +
+  "\n\n-- =============================================================================\n" +
+  "--  SUBSTITUIR TUDO: apaga os pontos/peixes atuais e recarrega o seed completo.\n" +
+  "--  (ARQUIVO GERADO por scripts/gen-sql.mjs — rode no SQL Editor do Supabase.)\n" +
+  "-- =============================================================================\n" +
+  "delete from public.peixes;\n" +
+  "delete from public.locais_pesca;\n\n" +
+  locaisInsert(SEED) + "\n\n" +
+  SEED.map(peixesBlock).join("\n\n") + "\n";
+writeFileSync(new URL("../supabase/aplicar-tudo.sql", import.meta.url), aplicarTudo);
+
 const nFish = SEED.reduce((a, l) => a + l.peixes.length, 0);
-console.log(`OK: ${SEED.length} águas / ${nFish} peixes -> supabase/seed.sql e seed-extra.sql`);
+console.log(`OK: ${SEED.length} águas / ${nFish} peixes -> supabase/seed.sql, seed-extra.sql e aplicar-tudo.sql`);
