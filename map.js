@@ -141,11 +141,11 @@ function renderCountries(locais) {
           return `
           <tr>
             <td><a href="index.html#loc-${esc(l.id)}">${esc(l.nome)}</a>${l.estimado ? ' <span class="badge-est" title="Espécies estimadas pela região, não confirmadas">est.</span>' : ""}<div class="muted small">${esc(l.regiao || "")} · <a href="${wikiUrl(l)}" target="_blank" rel="noopener">fonte</a></div></td>
-            <td>${esc(l.nivel || "—")}</td>
-            <td class="num">${cr(l.preco_viagem)}</td>
-            <td class="num">${cr(l.diaria)}</td>
-            <td>${bestTxt}</td>
-            <td class="num">${l.peixes.length}</td>
+            <td data-label="Nível">${esc(l.nivel || "—")}</td>
+            <td class="num" data-label="Viagem">${cr(l.preco_viagem)}</td>
+            <td class="num" data-label="Diária">${cr(l.diaria)}</td>
+            <td data-label="Melhor captura">${bestTxt}</td>
+            <td class="num" data-label="Peixes">${l.peixes.length}</td>
           </tr>`;
         }).join("")}</tbody>
       </table></div>

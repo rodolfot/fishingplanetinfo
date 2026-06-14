@@ -497,12 +497,12 @@ function renderSpot(loc, fishes) {
           ${f.profundidade ? `<div class="fish-obs">📍 ${esc(f.profundidade)}</div>` : ""}
           ${f.obs ? `<div class="fish-obs">${esc(f.obs)}</div>` : ""}
         </td>
-        <td class="num price-cell" ${f.aprox ? 'title="valor aproximado da comunidade"' : ""}>${aprx(f, f.valor_kg)}${fmtMoney(f.valor_kg)}</td>
-        <td class="num xp-cell">${aprx(f, f.xp_kg)}${fmtXp(f.xp_kg)}</td>
-        <td class="per-cell">${periodoBadge(f.periodo)}</td>
-        <td class="cell-isca">${esc(f.isca) || "—"}</td>
-        <td class="cell-vara">${esc(f.tipo_vara) || "—"}</td>
-        <td class="time">${fmtTime(f.horario_inicio, f.horario_fim)}</td>
+        <td class="num price-cell" data-label="cr/kg" ${f.aprox ? 'title="valor aproximado da comunidade"' : ""}>${aprx(f, f.valor_kg)}${fmtMoney(f.valor_kg)}</td>
+        <td class="num xp-cell" data-label="XP/kg">${aprx(f, f.xp_kg)}${fmtXp(f.xp_kg)}</td>
+        <td class="per-cell" data-label="Período">${periodoBadge(f.periodo)}</td>
+        <td class="cell-isca" data-label="Isca">${esc(f.isca) || "—"}</td>
+        <td class="cell-vara" data-label="Vara">${esc(f.tipo_vara) || "—"}</td>
+        <td class="time" data-label="Horário">${fmtTime(f.horario_inicio, f.horario_fim)}</td>
         <td class="num acoes">
           <button class="edit" data-action="editFish" data-local="${esc(loc.id)}" data-id="${esc(f.id)}" title="Editar">✎</button>
           <button class="del" data-action="delFish" data-local="${esc(loc.id)}" data-id="${esc(f.id)}" title="Remover">✕</button>
