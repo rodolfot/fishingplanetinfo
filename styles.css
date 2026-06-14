@@ -91,6 +91,11 @@ h1 { margin: 0 0 6px; font-size: 1.7rem; }
 .country { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 6px 0 2px; margin-bottom: 14px; overflow: hidden; }
 .country h3 { margin: 8px 14px; font-size: 1rem; }
 .country table { min-width: 640px; }
+/* links da tabela por país: contraste alto sobre o card escuro */
+.country a { color: #7cc0ff; font-weight: 600; text-decoration: none; }
+.country a:hover { color: #a8d6ff; text-decoration: underline; }
+.country .muted a { color: var(--accent); }       /* link "fonte" */
+.country .muted a:hover { color: #6fe0a0; }
 .licencas { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; margin-bottom: 16px; }
 .licencas ul { margin: 6px 0 12px; padding-left: 18px; line-height: 1.6; }
 .lic-table { min-width: 460px; }
